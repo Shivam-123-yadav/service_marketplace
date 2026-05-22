@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customers | ServiceHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/customer.css' %}">
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <span>ServiceHub</span>
+  </div>
+
+  <p class="nav-label">Main Menu</p>
+  <nav class="menu">
+    <a href="/api/users/dashboard-page/"><i class="fa fa-gauge-high"></i> Dashboard</a>
+    <a href="/api/users/admin-page/"><i class="fa fa-user-shield"></i> Admin Panel</a>
+    <a href="/api/users/services-page/"><i class="fa fa-briefcase"></i> Services</a>
+    <a href="/api/users/booking-page/"><i class="fa fa-calendar-check"></i> Bookings</a>
+    <a href="/api/users/customer-page/" class="active"><i class="fa fa-users"></i> Customers</a>
+  </nav>
+
+  <p class="nav-label" style="margin-top:28px;">Settings</p>
+  <nav class="menu">
+    <a href="#"><i class="fa fa-chart-bar"></i> Reports</a>
+    <a href="admin.html"><i class="fa fa-shield-halved"></i> Admin Panel</a>
+    <a href="#"><i class="fa fa-gear"></i> Settings</a> 
+   <a href="#" onclick="logout()" style="color:#ff6b6b;"><i class="fa fa-right-from-bracket"></i> Logout</a>
+
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="s-avatar">A</div>
+    <div class="user-info">
+      <div class="name" id="userName">Admin User</div>
+      <div class="role" id="userRole">Super Admin</div>
+    </div>
+    <i class="fa fa-ellipsis-vertical" style="color:var(--muted);margin-left:auto;font-size:13px;"></i>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <header class="topbar">
+    <div class="page-title">Customers</div>
+    <div class="topbar-right">
+      <div class="icon-btn">
+        <i class="fa fa-bell" style="font-size:14px;"></i>
+        <span class="notif-dot"></span>
+      </div>
+      <div class="icon-btn"><i class="fa fa-sliders" style="font-size:14px;"></i></div>
+      <button class="add-btn" onclick="openAddCustomerModal()">
+  <i class="fa fa-user-plus"></i> Add Customer
+</button>
+
+            <button class="logout-btn" onclick="logout()"><i class="fa fa-right-from-bracket"></i> Logout</button>
+
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- KPI Strip -->
+    <div class="kpi-strip">
+      <div class="kpi">
+        <div class="kpi-icon" style="background:rgba(91,110,248,.15);color:var(--accent);"><i class="fa fa-users"></i></div>
+        <div><div class="kpi-val" id="kTotalUsers">0</div><div class="kpi-lbl">Total Users</div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icon" style="background:rgba(248,87,166,.12);color:var(--accent2);"><i class="fa fa-user"></i></div>
+        <div><div class="kpi-val" id="kCustomers">0</div><div class="kpi-lbl">Customers</div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icon" style="background:rgba(0,229,180,.12);color:var(--accent3);"><i class="fa fa-store"></i></div>
+        <div><div class="kpi-val" id="kVendors">0</div><div class="kpi-lbl">Vendors</div></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-icon" style="background:rgba(251,191,36,.12);color:#fbbf24;"><i class="fa fa-user-check"></i></div>
+        <div><div class="kpi-val" id="kActive">0</div><div class="kpi-lbl">Active</div></div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <div class="view-toggle">
+          <div class="vtab active" id="gridBtn" onclick="setView('grid')" title="Grid view"><i class="fa fa-grip"></i></div>
+          <div class="vtab"       id="listBtn" onclick="setView('list')" title="List view"><i class="fa fa-list"></i></div>
+        </div>
+        <select class="role-filter" id="roleFilter" onchange="applyFilters()">
+          <option value="all">All Roles</option>
+          <option value="customer">Customers</option>
+          <option value="vendor">Vendors</option>
+        </select>
+        <select class="role-filter" id="statusFilter" onchange="applyFilters()">
+          <option value="all">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+      <div class="toolbar-right">
+        <div class="search-wrap">
+          <i class="fa fa-search"></i>
+          <input type="text" id="searchInput" placeholder="Search by name, email, city…" oninput="applyFilters()" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid View -->
+    <div id="gridView"></div>
+
+    <!-- List View -->
+    <div id="listView">
+      <div class="panel">
+        <table>
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Role</th>
+              <th>City</th>
+              <th>Bookings</th>
+              <th>Spent</th>
+              <th>Joined</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="listBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ MODAL ══ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="{% static 'js/customer.js' %}"></script>
+
+</body>
+</html>

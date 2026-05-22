@@ -1,0 +1,261 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vendor Panel | ServiceHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/vendor.css' %}">
+  
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">🏪</div>
+    <span>VendorHub</span>
+  </div>
+
+  <div class="vendor-pill"><i class="fa fa-store" style="font-size:10px;"></i> Vendor Account</div>
+
+  <p class="nav-label">My Panel</p>
+  <nav class="menu">
+    <a href="" class="active"><i class="fa fa-gauge-high"></i> Dashboard</a>
+    <a href="#" onclick="switchToTab('services',this)"><i class="fa fa-briefcase"></i> My Services</a>
+    <a href="#" onclick="switchToTab('bookings',this)"><i class="fa fa-calendar-check"></i> Bookings</a>
+  </nav>
+
+  <p class="nav-label" style="margin-top:28px;">Account</p>
+  <nav class="menu">
+    <a href="/api/users/vendor-profile/"><i class="fa fa-circle-user"></i> My Profile</a>
+    <a href="/api/users/vendor-analytics/"><i class="fa fa-chart-bar"></i> Analytics</a>
+    <a href="#"><i class="fa fa-gear"></i> Settings</a>
+    <a href="#" onclick="logout()" style="color:#ff6b6b;"><i class="fa fa-right-from-bracket"></i> Logout</a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="s-avatar" id="vendorAvatar">V</div>
+    <div class="user-info">
+      <div class="name" id="vendorName">Loading...</div>
+      <div class="role" id="vendorRole">Vendor</div>
+    </div>
+    <i class="fa fa-ellipsis-vertical" style="color:var(--muted);margin-left:auto;font-size:13px;"></i>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <header class="topbar">
+    <div class="page-title">Vendor Dashboard</div>
+    <div class="topbar-right">
+      <div class="vendor-badge"><i class="fa fa-circle-check" style="font-size:11px;"></i> Verified</div>
+      <div class="icon-btn">
+        <i class="fa fa-bell" style="font-size:14px;"></i>
+        <span class="notif-dot"></span>
+      </div>
+      <div class="icon-btn"><i class="fa fa-sliders" style="font-size:14px;"></i></div>
+      <button class="logout-btn" onclick="logout()"><i class="fa fa-right-from-bracket"></i> Logout</button>
+
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- Welcome -->
+    <div class="welcome">
+      <div>
+        <h2 id="vendorWelcome">Welcome back 👋</h2>
+        <p>You have <span id="pendingCount" style="color:var(--accent3);font-weight:700;">3</span> pending bookings waiting for your response.</p>
+      </div>
+      <button class="welcome-action" onclick="openServiceForm()">
+        <i class="fa fa-plus"></i> Add New Service
+      </button>
+    </div>
+
+    <!-- KPI Strip -->
+    <div class="kpi-strip">
+      <div class="kpi">
+        <div class="kpi-glow" style="background:var(--accent3);"></div>
+        <div class="kpi-icon" style="background:rgba(0,229,180,.15);color:var(--accent3);"><i class="fa fa-calendar-check"></i></div>
+        <div class="kpi-val" id="totalBookings">0</div>
+        <div class="kpi-lbl">Total Bookings</div>
+        <div class="kpi-trend up"><i class="fa fa-arrow-trend-up"></i> +8 this week</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-glow" style="background:var(--accent);"></div>
+        <div class="kpi-icon" style="background:rgba(91,110,248,.15);color:var(--accent);"><i class="fa fa-circle-check"></i></div>
+        <div class="kpi-val" data-val="60">0</div>
+        <div class="kpi-lbl">Completed Jobs</div>
+        <div class="kpi-trend up"><i class="fa fa-arrow-trend-up"></i> 71% completion</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-glow" style="background:var(--accent2);"></div>
+        <div class="kpi-icon" style="background:rgba(248,87,166,.12);color:var(--accent2);"><i class="fa fa-indian-rupee-sign"></i></div>
+        <div class="kpi-val" id="earnKpi">₹0</div>
+        <div class="kpi-lbl">Total Earnings</div>
+        <div class="kpi-trend up"><i class="fa fa-arrow-trend-up"></i> +12% vs last month</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-glow" style="background:#fbbf24;"></div>
+        <div class="kpi-icon" style="background:rgba(251,191,36,.12);color:#fbbf24;"><i class="fa fa-star"></i></div>
+        <div class="kpi-val">4.8</div>
+        <div class="kpi-lbl">Avg. Rating</div>
+        <div class="kpi-trend up"><i class="fa fa-arrow-trend-up"></i> 124 reviews</div>
+      </div>
+    </div>
+
+    <!-- Mid Grid: Chart + Service Health -->
+    <div class="mid-grid">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Weekly Earnings</span>
+          <span class="pill">Last 7 Days</span>
+        </div>
+        <div class="bar-chart" id="barChart"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:12px;">
+          <span style="font-size:12px;color:var(--muted);">Total this week</span>
+          <span id="weeklyTotal" style="font-family:'Syne',sans-serif;font-weight:700;color:var(--accent3);">₹0</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Service Performance</span>
+        </div>
+        <div class="health-list" id="healthList"></div>
+      </div>
+    </div>
+
+    <!-- Tabs Panel -->
+    <div class="tabs-panel">
+      <div class="tabs-header">
+        <div class="tab-btns">
+          <button class="tab-btn active" id="tabServices" onclick="showTab('services', this)">
+            <i class="fa fa-briefcase"></i> My Services
+          </button>
+          <button class="tab-btn" id="tabBookings" onclick="showTab('bookings', this)">
+            <i class="fa fa-calendar-check"></i> Bookings
+            <span id="pendingBadge" style="background:rgba(251,191,36,.15);color:#fbbf24;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;">3</span>
+          </button>
+        </div>
+        <div class="tabs-action">
+          <div class="search-wrap">
+            <i class="fa fa-search"></i>
+            <input type="text" id="tabSearch" placeholder="Search…" oninput="handleSearch()" />
+          </div>
+          <!-- <button class="add-btn" onclick="openAddModal()"><i class="fa fa-plus"></i> Add Service</button> -->
+        </div>
+      </div>
+      <table>
+        <thead><tr id="tHead"></tr></thead>
+        <tbody id="tBody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ ADD SERVICE MODAL ══ -->
+<div class="service-modal-overlay" id="srvOverlay">
+  <div id="serviceModal">
+
+    <!-- Banner -->
+    <div class="srv-modal-banner">
+      <div class="srv-modal-icon"><i class="fa fa-briefcase"></i></div>
+      <button class="srv-modal-close" onclick="closeServiceForm()">
+        <i class="fa fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="srv-modal-body">
+      <div class="srv-modal-title">New Service</div>
+      <div class="srv-modal-sub">Fill in the details to add a new service</div>
+
+      <div class="srv-field">
+        <label class="srv-label"><i class="fa fa-tag"></i> Service Name</label>
+        <input type="text" id="srvName" placeholder="e.g. Premium Home Cleaning">
+      </div>
+
+      <div class="srv-field">
+        <label class="srv-label"><i class="fa fa-layer-group"></i> Category</label>
+        <div class="srv-cat-pills">
+          <span class="srv-cat-pill" onclick="selectSrvCat(this,'Home')"><i class="fa fa-house"></i> Home</span>
+          <span class="srv-cat-pill" onclick="selectSrvCat(this,'Tech')"><i class="fa fa-laptop"></i> Tech</span>
+          <span class="srv-cat-pill" onclick="selectSrvCat(this,'Beauty')"><i class="fa fa-spa"></i> Beauty</span>
+          <span class="srv-cat-pill" onclick="selectSrvCat(this,'Fitness')"><i class="fa fa-dumbbell"></i> Fitness</span>
+          <span class="srv-cat-pill" onclick="selectSrvCat(this,'Creative')"><i class="fa fa-palette"></i> Creative</span>
+        </div>
+        <input type="text" id="srvCategory" placeholder="Or type custom category…">
+      </div>
+
+      <div class="srv-field-row">
+        <div class="srv-field" style="margin-bottom:0">
+          <label class="srv-label"><i class="fa fa-indian-rupee-sign"></i> Price</label>
+          <div class="srv-price-wrap">
+            <span class="srv-price-prefix">₹</span>
+            <input type="number" id="srvPrice" placeholder="0.00">
+          </div>
+        </div>
+        <div class="srv-field" style="margin-bottom:0">
+          <label class="srv-label"><i class="fa fa-clock"></i> Duration</label>
+          <div class="srv-time-wrap">
+            <input type="text" id="srvTime" placeholder="30">
+            <span class="srv-time-suffix">MIN</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="srv-field" style="margin-top:14px;">
+        <label class="srv-label"><i class="fa fa-align-left"></i> Description</label>
+        <textarea id="srvDesc" placeholder="Describe what this service includes…"></textarea>
+      </div>
+
+      <div class="srv-field">
+        <label class="srv-label"><i class="fa fa-image"></i> Service Image</label>
+        <div class="srv-img-upload" id="srvImgUpload">
+          <input type="file" id="srvImage" accept="image/*" onchange="previewSrvImage(this)">
+          <div class="srv-img-preview" id="srvImgPreview">
+            <div class="srv-img-preview-overlay">
+              <button class="srv-preview-btn" type="button">
+                <i class="fa fa-pen"></i> Change
+              </button>
+              <button class="srv-preview-btn remove" type="button" onclick="removeSrvImage(event)">
+                <i class="fa fa-trash"></i> Remove
+              </button>
+            </div>
+          </div>
+          <div class="srv-upload-icon" id="srvUploadPlaceholder">
+            <i class="fa fa-cloud-arrow-up"></i>
+          </div>
+          <span class="srv-upload-text" id="srvUploadText">Click or drag image here</span>
+          <span class="srv-upload-hint" id="srvUploadHint">PNG, JPG up to 5MB</span>
+        </div>
+      </div>
+
+      <div class="srv-divider"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="srv-modal-footer">
+      <div class="srv-footer-hint"><kbd>ESC</kbd> to cancel</div>
+      <div class="srv-btn-group">
+        <button class="srv-btn-cancel" onclick="closeServiceForm()">Cancel</button>
+        <button class="srv-btn-save" onclick="createService()">
+          <i class="fa fa-check"></i> Save Service
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="{% static 'js/vendor.js' %}"></script>
+</body>
+</html>

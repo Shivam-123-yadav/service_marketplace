@@ -1,0 +1,343 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | ServiceApp</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/admin-dashboard.css' %}">
+  <link rel="stylesheet" href="{% static 'css/service.css' %}">
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <span>ServiceApp</span>
+  </div>
+
+  
+
+  <p class="nav-label">Main Menu</p>
+  <nav class="menu">
+    <a href="/api/users/dashboard-page/" class="active"><i class="fa fa-gauge-high"></i> Dashboard</a>
+    <a href="/api/users/admin-page/" ><i class="fa fa-user-shield"></i> Admin Panel</a>
+
+    <a href="/api/users/services-page/"><i class="fa fa-briefcase"></i> Services</a>
+    <a href="/api/users/booking-page/"><i class="fa fa-calendar-check"></i> Bookings</a>
+    <a href="/api/users/customer-page/"><i class="fa fa-users"></i> Customers</a>
+  </nav>
+
+  <p class="nav-label" style="margin-top:28px;">Settings</p>
+  <nav class="menu">
+    <a href="#"><i class="fa fa-chart-bar"></i> Reports</a>
+    <a href="#"><i class="fa fa-shield-halved"></i> Permissions</a>
+    <a href="#"><i class="fa fa-gear"></i> Settings</a>
+    <a href="#" onclick="logout()" style="color:#ff6b6b;"><i class="fa fa-right-from-bracket"></i> Logout</a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="avatar">A</div>
+    <div class="user-info">
+      <div class="name" id="userName">Admin User</div>
+      <div class="role" id="userRole">Super Admin</div>
+    </div>
+    <i class="fa fa-ellipsis-vertical" style="color:var(--muted);margin-left:auto;font-size:13px;"></i>
+  </div>
+</aside>
+
+
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="page-title">Dashboard</div>
+    <div class="topbar-right">
+      <div class="search-bar">
+        <i class="fa fa-search" style="font-size:12px;"></i>
+        <input type="text" placeholder="Search anything…" />
+      </div>
+      
+      <div class="icon-btn">
+        <i class="fa fa-bell" style="font-size:14px;"></i>
+        <span class="notif-dot"></span>
+      </div>
+      <div class="icon-btn">
+        <i class="fa fa-sliders" style="font-size:14px;"></i>
+      </div>
+      <button class="logout-btn" onclick="logout()"><i class="fa fa-right-from-bracket"></i> Logout</button>
+
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- Welcome -->
+    <div class="welcome">
+      <div>
+        <h2 id="welcomeText">Good morning, Admin 👋</h2>
+        <p>Here's what's happening with your platform today.</p>
+      </div>
+      <div class="welcome-badge" onclick="openServiceForm()">
+  <i class="fa fa-plus"></i> New Service
+</div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="cards">
+      <div class="card">
+        <div class="card-glow"></div>
+        <div class="card-icon"><i class="fa fa-calendar-check"></i></div>
+        <div class="card-label">Total Bookings</div>
+        <div class="card-value" data-val="120">0</div>
+        <div class="card-change up"><i class="fa fa-arrow-trend-up"></i> +12% this week</div>
+      </div>
+      <div class="card">
+        <div class="card-glow"></div>
+        <div class="card-icon"><i class="fa fa-briefcase"></i></div>
+        <div class="card-label">Total Services</div>
+        <div class="card-value" data-val="45">0</div>
+        <div class="card-change up"><i class="fa fa-arrow-trend-up"></i> +4 new this month</div>
+      </div>
+      <div class="card">
+        <div class="card-glow"></div>
+        <div class="card-icon"><i class="fa fa-indian-rupee-sign"></i></div>
+        <div class="card-label">Revenue</div>
+        <div class="card-value" id="rev" data-val="25000">₹0</div>
+        <div class="card-change down"><i class="fa fa-arrow-trend-down"></i> -3% vs last month</div>
+      </div>
+    </div>
+
+    <!-- Chart + Stats -->
+    <div class="mid-grid">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Booking Overview</span>
+          <span class="pill">Last 7 Days</span>
+        </div>
+        <canvas id="bookingChart" height="200"></canvas>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Service Breakdown</span>
+        </div>
+        <div class="stat-list">
+          <div class="stat-item">
+            <div class="stat-dot" style="background:var(--accent);"></div>
+            <div class="stat-info">
+              <div class="stat-name">AC Repair</div>
+              <div class="stat-bar-wrap"><div class="stat-bar" style="width:72%;background:var(--accent);"></div></div>
+            </div>
+            <div class="stat-num">38</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-dot" style="background:var(--accent3);"></div>
+            <div class="stat-info">
+              <div class="stat-name">Cleaning</div>
+              <div class="stat-bar-wrap"><div class="stat-bar" style="width:55%;background:var(--accent3);"></div></div>
+            </div>
+            <div class="stat-num">29</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-dot" style="background:var(--accent2);"></div>
+            <div class="stat-info">
+              <div class="stat-name">Plumbing</div>
+              <div class="stat-bar-wrap"><div class="stat-bar" style="width:40%;background:var(--accent2);"></div></div>
+            </div>
+            <div class="stat-num">21</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-dot" style="background:#fbbf24;"></div>
+            <div class="stat-info">
+              <div class="stat-name">Electrician</div>
+              <div class="stat-bar-wrap"><div class="stat-bar" style="width:24%;background:#fbbf24;"></div></div>
+            </div>
+            <div class="stat-num">13</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-dot" style="background:#a78bfa;"></div>
+            <div class="stat-info">
+              <div class="stat-name">Painting</div>
+              <div class="stat-bar-wrap"><div class="stat-bar" style="width:18%;background:#a78bfa;"></div></div>
+            </div>
+            <div class="stat-num">9</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Recent Bookings Table -->
+    <div class="table-wrap">
+      <div class="panel-header">
+        <span class="panel-title">Recent Bookings</span>
+        <span class="pill">View All</span>
+      </div>
+      <table>
+        <thead  >
+          <tr>
+            <th>Customer</th>
+            <th>Service</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="customer-cell"><div class="c-avatar" style="background:rgba(91,110,248,.2);color:var(--accent);">R</div><div><div style="font-weight:500;">Rahul Sharma</div><div style="font-size:11px;color:var(--muted);">Mumbai</div></div></div></td>
+            <td><div class="service-badge"><i class="fa fa-snowflake"></i> AC Repair</div></td>
+            <td class="date-cell">12 Mar 2025</td>
+            <td style="font-weight:600;">₹1,200</td>
+            <td><span class="badge pending">Pending</span></td>
+            <td><span class="action-btn"><i class="fa fa-ellipsis-h"></i></span></td>
+          </tr>
+          <tr>
+            <td><div class="customer-cell"><div class="c-avatar" style="background:rgba(0,229,180,.15);color:var(--accent3);">A</div><div><div style="font-weight:500;">Amit Verma</div><div style="font-size:11px;color:var(--muted);">Delhi</div></div></div></td>
+            <td><div class="service-badge"><i class="fa fa-broom"></i> Cleaning</div></td>
+            <td class="date-cell">11 Mar 2025</td>
+            <td style="font-weight:600;">₹800</td>
+            <td><span class="badge completed">Completed</span></td>
+            <td><span class="action-btn"><i class="fa fa-ellipsis-h"></i></span></td>
+          </tr>
+          <tr>
+            <td><div class="customer-cell"><div class="c-avatar" style="background:rgba(248,87,166,.15);color:var(--accent2);">N</div><div><div style="font-weight:500;">Neha Singh</div><div style="font-size:11px;color:var(--muted);">Pune</div></div></div></td>
+            <td><div class="service-badge"><i class="fa fa-wrench"></i> Plumbing</div></td>
+            <td class="date-cell">10 Mar 2025</td>
+            <td style="font-weight:600;">₹650</td>
+            <td><span class="badge cancelled">Cancelled</span></td>
+            <td><span class="action-btn"><i class="fa fa-ellipsis-h"></i></span></td>
+          </tr>
+          <tr>
+            <td><div class="customer-cell"><div class="c-avatar" style="background:rgba(251,191,36,.15);color:#fbbf24;">P</div><div><div style="font-weight:500;">Priya Patel</div><div style="font-size:11px;color:var(--muted);">Bangalore</div></div></div></td>
+            <td><div class="service-badge"><i class="fa fa-bolt"></i> Electrician</div></td>
+            <td class="date-cell">09 Mar 2025</td>
+            <td style="font-weight:600;">₹950</td>
+            <td><span class="badge completed">Completed</span></td>
+            <td><span class="action-btn"><i class="fa fa-ellipsis-h"></i></span></td>
+          </tr>
+          <tr>
+            <td><div class="customer-cell"><div class="c-avatar" style="background:rgba(167,139,250,.15);color:#a78bfa;">K</div><div><div style="font-weight:500;">Karan Mehta</div><div style="font-size:11px;color:var(--muted);">Hyderabad</div></div></div></td>
+            <td><div class="service-badge"><i class="fa fa-paint-roller"></i> Painting</div></td>
+            <td class="date-cell">08 Mar 2025</td>
+            <td style="font-weight:600;">₹3,200</td>
+            <td><span class="badge pending">Pending</span></td>
+            <td><span class="action-btn"><i class="fa fa-ellipsis-h"></i></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="service-modal-overlay" id="srvOverlay">
+  <div id="serviceModal">
+
+    <!-- Banner -->
+    <div class="srv-modal-banner">
+      <div class="srv-modal-icon"><i class="fa fa-briefcase"></i></div>
+      <button class="srv-modal-close" onclick="closeServiceForm()">
+        <i class="fa fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="srv-modal-body">
+      <div class="srv-modal-title">New Service</div>
+      <div class="srv-modal-sub">Fill in the details to add a new service</div>
+
+      <div class="srv-field">
+        <label class="srv-label"><i class="fa fa-tag"></i> Service Name</label>
+        <input type="text" id="srvName" placeholder="e.g. Premium Home Cleaning">
+      </div>
+
+      <div class="srv-field">
+        <label class="srv-label"><i class="fa fa-layer-group"></i> Category</label>
+        <div class="srv-cat-pills">
+          <span class="srv-cat-pill" onclick="selectSrvCat(this,'Home')"><i class="fa fa-house"></i> Home</span>
+          <span class="srv-cat-pill" onclick="selectSrvCat(this,'Tech')"><i class="fa fa-laptop"></i> Tech</span>
+          <span class="srv-cat-pill" onclick="selectSrvCat(this,'Beauty')"><i class="fa fa-spa"></i> Beauty</span>
+          <span class="srv-cat-pill" onclick="selectSrvCat(this,'Fitness')"><i class="fa fa-dumbbell"></i> Fitness</span>
+          <span class="srv-cat-pill" onclick="selectSrvCat(this,'Creative')"><i class="fa fa-palette"></i> Creative</span>
+        </div>
+        <input type="text" id="srvCategory" placeholder="Or type custom category…">
+      </div>
+
+      <div class="srv-field-row">
+        <div class="srv-field" style="margin-bottom:0">
+          <label class="srv-label"><i class="fa fa-indian-rupee-sign"></i> Price</label>
+          <div class="srv-price-wrap">
+            <span class="srv-price-prefix">₹</span>
+            <input type="number" id="srvPrice" placeholder="0.00">
+          </div>
+        </div>
+        <div class="srv-field" style="margin-bottom:0">
+          <label class="srv-label"><i class="fa fa-clock"></i> Duration</label>
+          <div class="srv-time-wrap">
+            <input type="text" id="srvTime" placeholder="30">
+            <span class="srv-time-suffix">MIN</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="srv-field" style="margin-top:14px;">
+        <label class="srv-label"><i class="fa fa-align-left"></i> Description</label>
+        <textarea id="srvDesc" placeholder="Describe what this service includes…"></textarea>
+      </div>
+
+      <div class="srv-field">
+  <label class="srv-label"><i class="fa fa-image"></i> Service Image</label>
+  <div class="srv-img-upload" id="srvImgUpload">
+    <input type="file" id="srvImage" accept="image/*" onchange="previewSrvImage(this)">
+    <div class="srv-img-preview" id="srvImgPreview">
+      <div class="srv-img-preview-overlay">
+        <button class="srv-preview-btn" type="button">
+          <i class="fa fa-pen"></i> Change
+        </button>
+        <button class="srv-preview-btn remove" type="button" onclick="removeSrvImage(event)">
+          <i class="fa fa-trash"></i> Remove
+        </button>
+      </div>
+    </div>
+    <div class="srv-upload-icon" id="srvUploadPlaceholder">
+      <i class="fa fa-cloud-arrow-up"></i>
+    </div>
+    <span class="srv-upload-text" id="srvUploadText">Click or drag image here</span>
+    <span class="srv-upload-hint" id="srvUploadHint">PNG, JPG up to 5MB</span>
+  </div>
+</div>
+
+      <div class="srv-divider"></div>
+    </div>
+
+    <!-- Footer -->
+    <div class="srv-modal-footer">
+      <div class="srv-footer-hint"><kbd>ESC</kbd> to cancel</div>
+      <div class="srv-btn-group">
+        <button class="srv-btn-cancel" onclick="closeServiceForm()">Cancel</button>
+        <button class="srv-btn-save" onclick="createService()">
+          <i class="fa fa-check"></i> Save Service
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="{% static 'js/admin-dashboard.js' %}"></script>
+
+</body>
+</html>

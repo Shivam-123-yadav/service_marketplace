@@ -1,0 +1,264 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Dashboard | ServiceHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/customers.css' %}">
+
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">👤</div>
+    <span>ServiceHub</span>
+  </div>
+
+  <div class="customer-pill"><i class="fa fa-user" style="font-size:10px;"></i> Customer Account</div>
+
+  <p class="nav-label">My Menu</p>
+  <nav class="menu">
+    <a href="" class="active"><i class="fa fa-gauge-high"></i> Dashboard</a>
+    <a href="#" onclick="scrollToServices()"><i class="fa fa-briefcase"></i> Browse Services</a>
+    <a href="#" onclick="switchFilter('all')"><i class="fa fa-calendar-check"></i> My Bookings</a>
+    <a href="#"><i class="fa fa-heart"></i> Wishlist</a>
+  </nav>
+
+  <p class="nav-label" style="margin-top:28px;">Account</p>
+  <nav class="menu">
+    <a href="#"><i class="fa fa-circle-user"></i> My Profile</a>
+    <a href="#"><i class="fa fa-star"></i> My Reviews</a>
+    <a href="#"><i class="fa fa-gear"></i> Settings</a>
+    <a href="#" onclick="logout()" style="color:#ff6b6b;"><i class="fa fa-right-from-bracket"></i> Logout</a>
+  </nav>
+
+  <!-- <div class="sidebar-footer">
+    <div class="s-avatar" id="sidebarAvatar">R</div>
+    <div class="user-info">
+      <div class="name" id="sidebarName">Rahul Sharma</div>
+      <div class="role">Customer</div>
+    </div>
+    <i class="fa fa-ellipsis-vertical" style="color:var(--muted);margin-left:auto;font-size:13px;"></i>
+  </div> -->
+
+
+  <div class="sidebar-footer">
+    <div class="s-avatar" id="sidebarAvatar">R</div>
+    <div class="user-info">
+      <div class="name" id="sidebarName">Rahul Sharma</div>
+      <div class="role">Customer</div>
+    </div>
+    <i class="fa fa-ellipsis-vertical" style="color:var(--muted);margin-left:auto;font-size:13px;"></i>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <header class="topbar">
+    <div class="page-title">My Dashboard</div>
+    <div class="topbar-right">
+      <div class="icon-btn">
+        <i class="fa fa-bell" style="font-size:14px;"></i>
+        <span class="notif-dot"></span>
+      </div>
+      <div class="icon-btn"><i class="fa fa-search" style="font-size:14px;"></i></div>
+      <button class="logout-btn" onclick="logout()"><i class="fa fa-right-from-bracket"></i> Logout</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- Welcome -->
+    <div class="welcome">
+      <div>
+        <h2 id="welcomeMsg">Welcome back, Rahul 👋</h2>
+        <p>Find the best services near you — fast, reliable, and affordable.</p>
+      </div>
+      <button class="book-now-btn" onclick="scrollToServices()">
+        <i class="fa fa-search"></i> Browse Services
+      </button>
+    </div>
+
+    <!-- KPI Strip -->
+    <div class="kpi-strip">
+      <div class="kpi">
+        <div class="kpi-glow" style="background:var(--accent2);"></div>
+        <div class="kpi-icon" style="background:rgba(248,87,166,.15);color:var(--accent2);"><i class="fa fa-calendar-check"></i></div>
+        <div class="kpi-val" data-val="8">0</div>
+        <div class="kpi-lbl">Total Bookings</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-glow" style="background:var(--accent3);"></div>
+        <div class="kpi-icon" style="background:rgba(0,229,180,.15);color:var(--accent3);"><i class="fa fa-circle-check"></i></div>
+        <div class="kpi-val" data-val="5">0</div>
+        <div class="kpi-lbl">Completed</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-glow" style="background:var(--accent);"></div>
+        <div class="kpi-icon" style="background:rgba(91,110,248,.15);color:var(--accent);"><i class="fa fa-clock"></i></div>
+        <div class="kpi-val" data-val="2">0</div>
+        <div class="kpi-lbl">Pending</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-glow" style="background:#fbbf24;"></div>
+        <div class="kpi-icon" style="background:rgba(251,191,36,.12);color:#fbbf24;"><i class="fa fa-indian-rupee-sign"></i></div>
+        <div class="kpi-val" id="spentKpi">₹0</div>
+        <div class="kpi-lbl">Total Spent</div>
+      </div>
+    </div>
+
+    <!-- Mid Grid: Browse Services + Quick Actions -->
+    <div class="mid-grid" id="servicesSection">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Browse Services</span>
+          <button class="see-all">See All →</button>
+        </div>
+
+        <!-- Category Pills -->
+        <div class="cat-pills" id="catPills">
+          <div class="cat-pill active" data-cat="all">All</div>
+          <div class="cat-pill" data-cat="home">🏠 Home</div>
+          <div class="cat-pill" data-cat="tech">💻 Tech</div>
+          <div class="cat-pill" data-cat="beauty">💆 Beauty</div>
+          <div class="cat-pill" data-cat="fitness">🏋️ Fitness</div>
+        </div>
+
+        <div class="srv-grid" id="srvGrid"></div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Quick Actions</span>
+        </div>
+        <div class="quick-actions">
+          <div class="qa-item" onclick="scrollToServices()">
+            <div class="qa-icon" style="background:rgba(248,87,166,.15);color:var(--accent2);"><i class="fa fa-magnifying-glass"></i></div>
+            <div class="qa-text">
+              <div class="qa-title">Find a Service</div>
+              <div class="qa-sub">Browse 100+ categories</div>
+            </div>
+            <i class="fa fa-chevron-right qa-arrow"></i>
+          </div>
+          <div class="qa-item" onclick="switchFilter('pending')">
+            <div class="qa-icon" style="background:rgba(251,191,36,.12);color:#fbbf24;"><i class="fa fa-clock"></i></div>
+            <div class="qa-text">
+              <div class="qa-title">Pending Bookings</div>
+              <div class="qa-sub">2 bookings awaiting</div>
+            </div>
+            <i class="fa fa-chevron-right qa-arrow"></i>
+          </div>
+          <div class="qa-item" onclick="switchFilter('completed')">
+            <div class="qa-icon" style="background:rgba(0,229,180,.12);color:var(--accent3);"><i class="fa fa-circle-check"></i></div>
+            <div class="qa-text">
+              <div class="qa-title">Completed Jobs</div>
+              <div class="qa-sub">5 services done</div>
+            </div>
+            <i class="fa fa-chevron-right qa-arrow"></i>
+          </div>
+          <div class="qa-item">
+            <div class="qa-icon" style="background:rgba(91,110,248,.15);color:var(--accent);"><i class="fa fa-headset"></i></div>
+            <div class="qa-text">
+              <div class="qa-title">Support</div>
+              <div class="qa-sub">24/7 help available</div>
+            </div>
+            <i class="fa fa-chevron-right qa-arrow"></i>
+          </div>
+          <div class="qa-item">
+            <div class="qa-icon" style="background:rgba(167,139,250,.15);color:#a78bfa;"><i class="fa fa-star"></i></div>
+            <div class="qa-text">
+              <div class="qa-title">Rate a Service</div>
+              <div class="qa-sub">Share your experience</div>
+            </div>
+            <i class="fa fa-chevron-right qa-arrow"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Bookings Table -->
+    <div class="table-wrap">
+      <div class="table-header">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:2px;">My Bookings</div>
+          <div style="font-size:12px;color:var(--muted);">Track all your service bookings</div>
+        </div>
+        <div class="filter-tabs" id="filterTabs">
+          <button class="ftab active" data-status="all"       onclick="switchFilter('all',this)">All</button>
+          <button class="ftab"        data-status="pending"   onclick="switchFilter('pending',this)">Pending</button>
+          <button class="ftab"        data-status="confirmed" onclick="switchFilter('confirmed',this)">Confirmed</button>
+          <button class="ftab"        data-status="completed" onclick="switchFilter('completed',this)">Completed</button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="bookingTable"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ BOOKING MODAL ══ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Book Service</h3>
+      <button class="modal-close" onclick="closeModal()"><i class="fa fa-xmark"></i></button>
+    </div>
+
+    <div class="modal-srv-preview" id="modalPreview"></div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Preferred Date</label>
+        <input type="date" id="bookDate" />
+      </div>
+      <div class="field">
+        <label>Time Slot</label>
+        <select id="bookTime">
+          <option>09:00 AM</option>
+          <option>11:00 AM</option>
+          <option>02:00 PM</option>
+          <option>04:00 PM</option>
+          <option>06:00 PM</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Address</label>
+      <input type="text" id="bookAddress" placeholder="Enter your full address" />
+    </div>
+
+    <div class="field">
+      <label>Special Instructions (optional)</label>
+      <textarea id="bookNote" placeholder="Any specific requirements…"></textarea>
+    </div>
+
+    <button class="modal-submit" onclick="confirmBooking()">
+      <i class="fa fa-calendar-check"></i> Confirm Booking
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="{% static 'js/customers.js' %}"></script>
+</body>
+</html>

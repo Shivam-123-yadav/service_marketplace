@@ -1,0 +1,453 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ServiceHub | Find & Hire Best Professionals</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+</head>
+<body>
+
+<!-- HEADER -->
+<header id="site-header">
+  <a href="#" class="logo">
+    <div class="logo-mark">⚡</div>
+    ServiceHub
+  </a>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#services">Services</a>
+    <a href="#how">How It Works</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="header-btns">
+    <button class="btn-ghost" onclick="window.location.href='/api/users/login-page/'">Login</button>
+    <button class="btn-primary" onclick="window.location.href='/api/users/register-page/'">Sign Up Free</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="hero-grid">
+    <div class="hero-left">
+      <div class="hero-eyebrow"><i class="fa fa-bolt"></i> &nbsp;India's #1 Service Marketplace</div>
+      <h1>Find &amp; Hire the <span class="grad">Best Professionals</span> Near You</h1>
+      <p class="hero-sub">Connect with verified service experts for AC repair, cleaning, plumbing, and 100+ more categories — all in one platform.</p>
+      <div class="hero-ctas">
+        <button class="btn-big btn-big-fill" onclick="window.location.href='/api/users/login-page/'">
+          <i class="fa fa-search"></i> Browse Services
+        </button>
+        <button class="btn-big btn-big-out" onclick="window.location.href='/api/users/register-page/'">
+          <i class="fa fa-store"></i> Become a Provider
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-num">10K+</div>
+          <div class="stat-label">Happy Customers</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">500+</div>
+          <div class="stat-label">Verified Vendors</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">100+</div>
+          <div class="stat-label">Categories</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">4.9★</div>
+          <div class="stat-label">Avg Rating</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="float-badge float-badge-1">
+        <div class="fb-icon" style="background:rgba(0,229,160,.12);color:#00e5a0;"><i class="fa fa-check"></i></div>
+        <div>
+          <div class="fb-label">Just booked</div>
+          <div class="fb-val">AC Repair · ₹399</div>
+        </div>
+      </div>
+
+      <div class="hero-card-main">
+        <div class="service-showcase">
+          <div class="srv-mini">
+            <span class="srv-mini-icon">🔧</span>
+            <div class="srv-mini-name">Home Repair</div>
+            <div class="srv-mini-price">from ₹499</div>
+            <div class="srv-mini-rating">4.9 ★</div>
+          </div>
+          <div class="srv-mini">
+            <span class="srv-mini-icon">❄️</span>
+            <div class="srv-mini-name">AC Service</div>
+            <div class="srv-mini-price">from ₹299</div>
+            <div class="srv-mini-rating">4.8 ★</div>
+          </div>
+          <div class="srv-mini">
+            <span class="srv-mini-icon">🧹</span>
+            <div class="srv-mini-name">Deep Cleaning</div>
+            <div class="srv-mini-price">from ₹799</div>
+            <div class="srv-mini-rating">4.9 ★</div>
+          </div>
+          <div class="srv-mini">
+            <span class="srv-mini-icon">💻</span>
+            <div class="srv-mini-name">Web Design</div>
+            <div class="srv-mini-price">from ₹4,999</div>
+            <div class="srv-mini-rating">5.0 ★</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="float-badge float-badge-2">
+        <div class="fb-val" style="color:var(--mint);">✓ Verified Professional</div>
+        <div class="fb-label">500+ background-checked vendors</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="mq">
+    <div class="marquee-item"><span>✦</span> Home Repair <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> AC Service <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Deep Cleaning <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Photography <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Web Design <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Fitness Training <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Plumbing <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Electrical <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Painting <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Home Repair <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> AC Service <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Deep Cleaning <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Photography <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Web Design <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Fitness Training <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Plumbing <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Electrical <span>✦</span></div>
+    <div class="marquee-item"><span>✦</span> Painting <span>✦</span></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-inner">
+    <div class="features-layout">
+      <div class="features-aside">
+        <div class="s-tag reveal">Why Choose Us</div>
+        <h2 class="s-title reveal reveal-d1">Everything You <br/>Need, In One Place</h2>
+        <p class="s-sub reveal reveal-d2">We make finding and booking trusted professionals fast, safe, and effortlessly simple.</p>
+        <div class="trust-badges reveal reveal-d3">
+          <div class="trust-item"><div class="trust-dot"></div> 100% background verified vendors</div>
+          <div class="trust-item"><div class="trust-dot" style="background:var(--coral)"></div> Full refund guarantee on dissatisfaction</div>
+          <div class="trust-item"><div class="trust-dot" style="background:var(--gold)"></div> Transparent pricing, zero hidden charges</div>
+          <div class="trust-item"><div class="trust-dot" style="background:var(--blue)"></div> 24/7 dedicated customer support</div>
+        </div>
+      </div>
+
+      <div class="feat-grid">
+        <div class="feat-card reveal">
+          <div class="feat-icon" style="background:rgba(79,142,255,.12);color:var(--blue)"><i class="fa fa-shield-halved"></i></div>
+          <h3>Safe &amp; Verified</h3>
+          <p>Every provider is background-checked before onboarding. Your safety is our first priority.</p>
+        </div>
+        <div class="feat-card reveal reveal-d1">
+          <div class="feat-icon" style="background:rgba(245,200,66,.1);color:var(--gold)"><i class="fa fa-star"></i></div>
+          <h3>Top Rated Pros</h3>
+          <p>Browse highly-rated professionals with genuine reviews from real verified customers.</p>
+        </div>
+        <div class="feat-card reveal reveal-d2">
+          <div class="feat-icon" style="background:rgba(0,229,160,.1);color:var(--mint)"><i class="fa fa-bolt"></i></div>
+          <h3>Instant Booking</h3>
+          <p>Book in seconds with flexible date/time slots and get instant confirmation on your device.</p>
+        </div>
+        <div class="feat-card reveal reveal-d3">
+          <div class="feat-icon" style="background:rgba(255,107,71,.1);color:var(--coral)"><i class="fa fa-headset"></i></div>
+          <h3>24/7 Support</h3>
+          <p>Our dedicated team is around the clock to help with any questions or concerns.</p>
+        </div>
+        <div class="feat-card reveal">
+          <div class="feat-icon" style="background:rgba(167,139,250,.12);color:#a78bfa"><i class="fa fa-tags"></i></div>
+          <h3>Best Prices</h3>
+          <p>Competitive transparent pricing with zero hidden charges — what you see is what you pay.</p>
+        </div>
+        <div class="feat-card reveal reveal-d1">
+          <div class="feat-icon" style="background:rgba(0,229,160,.1);color:var(--mint)"><i class="fa fa-circle-check"></i></div>
+          <h3>Quality Guarantee</h3>
+          <p>Not satisfied? We'll send another professional or give you a full refund, no questions asked.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section" id="services" style="padding-top:0">
+  <div class="section-inner">
+    <div class="section-head center">
+      <div class="s-tag reveal">Popular Categories</div>
+      <h2 class="s-title reveal reveal-d1">Services We Offer</h2>
+      <p class="s-sub reveal reveal-d2">From home repairs to digital services — find what you need, instantly.</p>
+    </div>
+
+    <div class="srv-grid">
+      <div class="srv-card reveal">
+        <div class="srv-thumb" style="background:linear-gradient(135deg,rgba(79,142,255,.25),rgba(255,107,71,.15))">🔧</div>
+        <div class="srv-body">
+          <div class="srv-tag">Home</div>
+          <h4>Home Repair</h4>
+          <p>Professional plumbing, electrical, and carpentry by certified technicians.</p>
+          <div class="srv-footer2">
+            <div class="srv-price2">₹499+</div>
+            <div class="srv-book">Book Now <i class="fa fa-arrow-right" style="font-size:.7rem"></i></div>
+          </div>
+        </div>
+      </div>
+      <div class="srv-card reveal reveal-d1">
+        <div class="srv-thumb" style="background:linear-gradient(135deg,rgba(0,229,160,.2),rgba(79,142,255,.2))">❄️</div>
+        <div class="srv-body">
+          <div class="srv-tag">Appliance</div>
+          <h4>AC Repair &amp; Service</h4>
+          <p>Expert AC installation, servicing, and gas refilling at your doorstep.</p>
+          <div class="srv-footer2">
+            <div class="srv-price2">₹299+</div>
+            <div class="srv-book">Book Now <i class="fa fa-arrow-right" style="font-size:.7rem"></i></div>
+          </div>
+        </div>
+      </div>
+      <div class="srv-card reveal reveal-d2">
+        <div class="srv-thumb" style="background:linear-gradient(135deg,rgba(255,107,71,.2),rgba(167,139,250,.2))">🧹</div>
+        <div class="srv-body">
+          <div class="srv-tag">Cleaning</div>
+          <h4>Deep Cleaning</h4>
+          <p>Home and office deep cleaning with eco-friendly products and trained staff.</p>
+          <div class="srv-footer2">
+            <div class="srv-price2">₹799+</div>
+            <div class="srv-book">Book Now <i class="fa fa-arrow-right" style="font-size:.7rem"></i></div>
+          </div>
+        </div>
+      </div>
+      <div class="srv-card reveal reveal-d3">
+        <div class="srv-thumb" style="background:linear-gradient(135deg,rgba(245,200,66,.15),rgba(255,107,71,.15))">💻</div>
+        <div class="srv-body">
+          <div class="srv-tag">Digital</div>
+          <h4>Web Design</h4>
+          <p>Custom websites and landing pages built by expert developers and designers.</p>
+          <div class="srv-footer2">
+            <div class="srv-price2">₹4,999+</div>
+            <div class="srv-book">Book Now <i class="fa fa-arrow-right" style="font-size:.7rem"></i></div>
+          </div>
+        </div>
+      </div>
+      <div class="srv-card reveal reveal-d1">
+        <div class="srv-thumb" style="background:linear-gradient(135deg,rgba(167,139,250,.2),rgba(79,142,255,.2))">📸</div>
+        <div class="srv-body">
+          <div class="srv-tag">Creative</div>
+          <h4>Photography</h4>
+          <p>Professional event, product, and portrait photography with quick delivery.</p>
+          <div class="srv-footer2">
+            <div class="srv-price2">₹2,499+</div>
+            <div class="srv-book">Book Now <i class="fa fa-arrow-right" style="font-size:.7rem"></i></div>
+          </div>
+        </div>
+      </div>
+      <div class="srv-card reveal reveal-d2">
+        <div class="srv-thumb" style="background:linear-gradient(135deg,rgba(0,229,160,.15),rgba(245,200,66,.15))">🏋️</div>
+        <div class="srv-body">
+          <div class="srv-tag">Wellness</div>
+          <h4>Fitness Training</h4>
+          <p>Personal trainers for home workouts, nutrition planning, and wellness coaching.</p>
+          <div class="srv-footer2">
+            <div class="srv-price2">₹999+</div>
+            <div class="srv-book">Book Now <i class="fa fa-arrow-right" style="font-size:.7rem"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section steps-section" id="how">
+  <div class="section-inner">
+    <div class="section-head center">
+      <div class="s-tag reveal">Process</div>
+      <h2 class="s-title reveal reveal-d1">Book a Service in 4 Easy Steps</h2>
+      <p class="s-sub reveal reveal-d2">Getting professional help has never been this simple or convenient.</p>
+    </div>
+    <div class="steps-layout">
+      <div class="step-card reveal">
+        <div class="step-num-wrap"><div class="step-num-inner">1</div></div>
+        <h4>Create Account</h4>
+        <p>Sign up in seconds as a customer or service provider with just your email.</p>
+      </div>
+      <div class="step-card reveal reveal-d1">
+        <div class="step-num-wrap"><div class="step-num-inner">2</div></div>
+        <h4>Browse Services</h4>
+        <p>Explore 100+ categories and compare providers by ratings and price.</p>
+      </div>
+      <div class="step-card reveal reveal-d2">
+        <div class="step-num-wrap"><div class="step-num-inner">3</div></div>
+        <h4>Book &amp; Pay</h4>
+        <p>Choose your slot, confirm the booking, and pay securely through the platform.</p>
+      </div>
+      <div class="step-card reveal reveal-d3">
+        <div class="step-num-wrap"><div class="step-num-inner">4</div></div>
+        <h4>Get It Done</h4>
+        <p>The professional arrives on time, completes the job, and you rate the experience.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-head center">
+      <div class="s-tag reveal">Testimonials</div>
+      <h2 class="s-title reveal reveal-d1">What Our Users Say</h2>
+      <p class="s-sub reveal reveal-d2">Real stories from real customers and vendors on our platform.</p>
+    </div>
+    <div class="testi-grid2">
+      <div class="testi-card2 featured reveal">
+        <span class="quote-mark">"</span>
+        <div class="testi-stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="testi-quote">Booked an AC technician at 10pm and he arrived the very next morning. Incredible speed and professionalism — this platform changed the way I handle home repairs completely. Would 100% recommend to anyone in India.</p>
+        <div class="testi-person">
+          <div class="testi-av" style="background:rgba(79,142,255,.18);color:var(--blue)">R</div>
+          <div>
+            <div class="testi-nm">Rahul Sharma</div>
+            <div class="testi-rl">Customer · Mumbai</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card2 reveal reveal-d1">
+        <div class="testi-stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <p class="testi-quote">As a vendor, this platform helped me grow my cleaning business 3x. The admin panel is super easy and bookings just keep coming in.</p>
+        <div class="testi-person">
+          <div class="testi-av" style="background:rgba(0,229,160,.15);color:var(--mint)">P</div>
+          <div>
+            <div class="testi-nm">Priya Patel</div>
+            <div class="testi-rl">Vendor · Bangalore</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card2 reveal reveal-d2">
+        <div class="testi-stars">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star" style="color:var(--txt3)">★</span>
+        </div>
+        <p class="testi-quote">Transparent pricing is what I love most. No surprise charges at the end. The plumber was skilled and finished the work under an hour.</p>
+        <div class="testi-person">
+          <div class="testi-av" style="background:rgba(255,107,71,.15);color:var(--coral)">N</div>
+          <div>
+            <div class="testi-nm">Neha Singh</div>
+            <div class="testi-rl">Customer · Pune</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section cta-section">
+  <div class="section-inner">
+    <div class="cta-inner reveal">
+      <div class="blob" style="position:absolute;width:300px;height:300px;background:radial-gradient(circle,rgba(79,142,255,.2),transparent);top:-80px;right:-80px;filter:blur(80px)"></div>
+      <h2>Ready to Get Started?</h2>
+      <p>Join 10,000+ satisfied customers. Find your perfect service provider today.</p>
+      <div class="cta-btns">
+        <button class="btn-big btn-big-fill" onclick="window.location.href='/api/users/register-page/'">
+          <i class="fa fa-user-plus"></i> Sign Up for Free
+        </button>
+        <button class="btn-big btn-big-out" onclick="window.location.href='/api/users/login-page/'">
+          <i class="fa fa-arrow-right-to-bracket"></i> Login
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo"><div class="logo-mark">⚡</div> ServiceHub</a>
+        <p>India's most trusted multi-role service marketplace connecting customers with skilled professionals.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Platform</h5>
+        <a href="#">Browse Services</a>
+        <a href="#">Become a Vendor</a>
+        <a href="#">Admin Panel</a>
+        <a href="#">Dashboard</a>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <a href="#">About Us</a>
+        <a href="#">Careers</a>
+        <a href="#">Blog</a>
+        <a href="#">Press</a>
+      </div>
+      <div class="footer-col">
+        <h5>Support</h5>
+        <a href="#">Help Center</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact Us</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 ServiceHub. All Rights Reserved.</p>
+      <div class="socials">
+        <div class="soc-btn"><i class="fab fa-twitter"></i></div>
+        <div class="soc-btn"><i class="fab fa-instagram"></i></div>
+        <div class="soc-btn"><i class="fab fa-linkedin-in"></i></div>
+        <div class="soc-btn"><i class="fab fa-github"></i></div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Header on scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('site-header').classList.toggle('scrolled', scrollY > 40);
+});
+
+// Reveal on scroll
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
+});
+
+// Service cards booking interaction
+document.querySelectorAll('.srv-card').forEach(c=>{
+  c.addEventListener('click',()=>{ window.location.href='/api/users/login-page/'; });
+});
+</script>
+</body>
+</html>

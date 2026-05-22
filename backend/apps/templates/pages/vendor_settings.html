@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings | VendorHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --bg: #080c14; --surface: #0f1623; --surface2: #151d2e;
+      --border: rgba(255,255,255,0.07);
+      --accent: #5b6ef8; --accent2: #f857a6; --accent3: #00e5b4;
+      --text: #e8ecf4; --muted: #6b7a99; --sidebar-w: 260px;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--text); display:flex; min-height:100vh; }
+    body::before {
+      content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+      background:
+        radial-gradient(ellipse 60% 40% at 70% 8%, rgba(0,229,180,.1), transparent),
+        radial-gradient(ellipse 50% 55% at 5% 80%, rgba(91,110,248,.09), transparent),
+        radial-gradient(ellipse 40% 40% at 50% 110%, rgba(248,87,166,.06), transparent);
+    }
+    /* SIDEBAR */
+    .sidebar { width:var(--sidebar-w); height:100vh; background:var(--surface); border-right:1px solid var(--border); position:fixed; left:0; top:0; display:flex; flex-direction:column; padding:32px 20px; z-index:200; }
+    .logo { display:flex; align-items:center; gap:10px; margin-bottom:48px; padding-left:4px; }
+    .logo-icon { width:38px; height:38px; background:linear-gradient(135deg,var(--accent3),var(--accent)); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:0 0 20px rgba(0,229,180,.35); }
+    .logo span { font-family:'Syne',sans-serif; font-weight:800; font-size:19px; letter-spacing:-.3px; }
+    .vendor-pill { display:inline-flex; align-items:center; gap:6px; background:rgba(0,229,180,.1); border:1px solid rgba(0,229,180,.25); border-radius:20px; padding:5px 12px; font-size:11px; color:var(--accent3); font-weight:600; letter-spacing:.5px; margin-bottom:28px; margin-left:4px; }
+    .nav-label { font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); padding:0 12px; margin-bottom:10px; margin-top:4px; }
+    .menu { display:flex; flex-direction:column; gap:4px; }
+    .menu a { display:flex; align-items:center; gap:13px; padding:13px 14px; border-radius:12px; color:var(--muted); text-decoration:none; font-size:14px; transition:all .25s; position:relative; }
+    .menu a i { width:18px; text-align:center; font-size:15px; }
+    .menu a:hover { color:var(--text); background:rgba(255,255,255,.05); }
+    .menu a.active { color:#fff; background:linear-gradient(135deg,rgba(0,229,180,.2),rgba(91,110,248,.12)); border:1px solid rgba(0,229,180,.28); font-weight:500; }
+    .menu a.active i { color:var(--accent3); }
+    .menu a.active::before { content:''; position:absolute; left:0; top:25%; height:50%; width:3px; background:linear-gradient(180deg,var(--accent3),var(--accent)); border-radius:0 3px 3px 0; }
+    .sidebar-footer { margin-top:auto; padding:16px 14px; background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:14px; display:flex; align-items:center; gap:12px; cursor:pointer; }
+    .s-avatar { width:38px; height:38px; background:linear-gradient(135deg,var(--accent3),var(--accent)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; flex-shrink:0; }
+    .user-info .name { font-size:13px; font-weight:500; }
+    .user-info .role { font-size:11px; color:var(--accent3); }
+    /* MAIN */
+    .main { margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; position:relative; z-index:1; }
+    .topbar { height:72px; display:flex; align-items:center; justify-content:space-between; padding:0 36px; background:rgba(8,12,20,.7); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; }
+    .page-title { font-family:'Syne',sans-serif; font-size:22px; font-weight:700; }
+    .topbar-right { display:flex; align-items:center; gap:12px; }
+    .vendor-badge { display:flex; align-items:center; gap:7px; background:rgba(0,229,180,.1); border:1px solid rgba(0,229,180,.25); border-radius:20px; padding:7px 14px; font-size:12px; color:var(--accent3); font-weight:600; }
+    .icon-btn { width:40px; height:40px; background:var(--surface2); border:1px solid var(--border); border-radius:10px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--muted); transition:all .2s; position:relative; }
+    .icon-btn:hover { color:var(--text); border-color:var(--accent3); }
+    .notif-dot { width:8px; height:8px; background:var(--accent2); border-radius:50%; position:absolute; top:6px; right:6px; border:2px solid var(--bg); animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.4);opacity:.7;} }
+    .logout-btn { display:flex; align-items:center; gap:8px; background:rgba(255,107,107,.1); border:1px solid rgba(255,107,107,.2); border-radius:10px; padding:9px 16px; color:#ff6b6b; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; }
+    .logout-btn:hover { background:rgba(255,107,107,.2); }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
+
+    /* ── LAYOUT ── */
+    .settings-layout { display:flex; gap:24px; padding:32px 36px; align-items:flex-start; }
+
+    /* ── LEFT NAV ── */
+    .settings-nav { width:220px; flex-shrink:0; position:sticky; top:88px; animation:fadeUp .35s ease both; }
+    .snav-item {
+      display:flex; align-items:center; gap:11px;
+      padding:12px 14px; border-radius:11px;
+      color:var(--muted); font-size:13.5px; font-weight:500;
+      cursor:pointer; transition:all .2s; margin-bottom:3px;
+    }
+    .snav-item i { width:18px; text-align:center; font-size:14px; }
+    .snav-item:hover { color:var(--text); background:rgba(255,255,255,.04); }
+    .snav-item.active { color:var(--accent3); background:rgba(0,229,180,.08); border:1px solid rgba(0,229,180,.15); }
+    .snav-item.active i { color:var(--accent3); }
+    .snav-divider { height:1px; background:var(--border); margin:10px 0; }
+    .snav-danger { color:#ff6b6b !important; }
+    .snav-danger:hover { background:rgba(255,107,107,.08) !important; }
+
+    /* ── RIGHT PANELS ── */
+    .settings-body { flex:1; display:flex; flex-direction:column; gap:20px; }
+
+    /* ── SECTION CARD ── */
+    .scard {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:18px; overflow:hidden;
+      animation:fadeUp .4s ease both;
+    }
+    .scard:nth-child(1){animation-delay:.05s;}
+    .scard:nth-child(2){animation-delay:.1s;}
+    .scard:nth-child(3){animation-delay:.15s;}
+    .scard:nth-child(4){animation-delay:.2s;}
+    .scard:nth-child(5){animation-delay:.25s;}
+
+    .scard-header {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:20px 24px; border-bottom:1px solid var(--border);
+    }
+    .scard-left { display:flex; align-items:center; gap:12px; }
+    .scard-icon {
+      width:38px; height:38px; border-radius:10px;
+      display:flex; align-items:center; justify-content:center; font-size:15px;
+    }
+    .scard-title { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; }
+    .scard-sub { font-size:12px; color:var(--muted); margin-top:2px; }
+
+    .save-btn {
+      display:flex; align-items:center; gap:7px;
+      padding:9px 18px;
+      background:linear-gradient(135deg,var(--accent),rgba(0,229,180,.8));
+      border:none; border-radius:10px; color:#fff;
+      font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700;
+      cursor:pointer; transition:opacity .2s, transform .2s;
+    }
+    .save-btn:hover { opacity:.85; transform:translateY(-1px); }
+
+    .scard-body { padding:24px; }
+
+    /* ── FORM FIELDS ── */
+    .field-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .field-full { grid-column:1/-1; }
+    .field { display:flex; flex-direction:column; gap:7px; }
+    .field label { font-size:11px; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); font-weight:600; display:flex; align-items:center; gap:5px; }
+    .field label i { font-size:10px; color:var(--accent); }
+    .field input, .field textarea, .field select {
+      width:100%; background:var(--surface2); border:1px solid var(--border);
+      border-radius:10px; color:var(--text); font-family:'DM Sans',sans-serif;
+      font-size:13.5px; padding:11px 14px; outline:none;
+      transition:border-color .2s, box-shadow .2s;
+    }
+    .field input:focus, .field textarea:focus, .field select:focus {
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(91,110,248,.12);
+    }
+    .field input::placeholder, .field textarea::placeholder { color:var(--muted); }
+    .field textarea { resize:none; height:80px; line-height:1.6; }
+    .field select { appearance:none; cursor:pointer; }
+
+    /* prefix input */
+    .input-prefix { position:relative; }
+    .input-prefix span { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:13px; pointer-events:none; }
+    .input-prefix input { padding-left:32px; }
+
+    /* ── TOGGLE SWITCH ── */
+    .toggle-row {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:16px 0; border-bottom:1px solid rgba(255,255,255,.04);
+    }
+    .toggle-row:last-child { border-bottom:none; padding-bottom:0; }
+    .toggle-row:first-child { padding-top:0; }
+    .toggle-info .tname { font-size:14px; font-weight:500; }
+    .toggle-info .tsub  { font-size:12px; color:var(--muted); margin-top:3px; }
+
+    .toggle {
+      position:relative; width:46px; height:26px; flex-shrink:0; cursor:pointer;
+    }
+    .toggle input { opacity:0; width:0; height:0; }
+    .toggle-track {
+      position:absolute; inset:0; background:var(--surface2);
+      border:1px solid var(--border); border-radius:13px;
+      transition:all .3s;
+    }
+    .toggle input:checked ~ .toggle-track {
+      background:rgba(0,229,180,.25);
+      border-color:rgba(0,229,180,.5);
+      box-shadow:0 0 10px rgba(0,229,180,.2);
+    }
+    .toggle-thumb {
+      position:absolute; top:3px; left:3px;
+      width:18px; height:18px; border-radius:50%;
+      background:var(--muted); transition:all .3s;
+    }
+    .toggle input:checked ~ .toggle-track .toggle-thumb {
+      left:23px; background:var(--accent3);
+    }
+
+    /* ── PLAN CARDS ── */
+    .plan-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .plan-card {
+      border:1px solid var(--border); border-radius:14px; padding:20px;
+      background:var(--surface2); cursor:pointer; transition:all .2s; position:relative;
+    }
+    .plan-card:hover { border-color:rgba(91,110,248,.3); }
+    .plan-card.current { border-color:rgba(0,229,180,.35); background:rgba(0,229,180,.05); }
+    .plan-badge-curr {
+      position:absolute; top:12px; right:12px;
+      background:rgba(0,229,180,.12); border:1px solid rgba(0,229,180,.25);
+      border-radius:6px; padding:3px 8px; font-size:10px; font-weight:700; color:var(--accent3);
+    }
+    .plan-name { font-family:'Syne',sans-serif; font-size:16px; font-weight:700; margin-bottom:4px; }
+    .plan-price { font-family:'Syne',sans-serif; font-size:26px; font-weight:800; color:var(--accent3); }
+    .plan-price span { font-size:13px; color:var(--muted); font-family:'DM Sans',sans-serif; font-weight:400; }
+    .plan-features { margin-top:14px; display:flex; flex-direction:column; gap:7px; }
+    .plan-feat { display:flex; align-items:center; gap:7px; font-size:12px; color:var(--muted); }
+    .plan-feat i { color:var(--accent3); font-size:11px; }
+    .plan-feat.off i { color:var(--muted); opacity:.4; }
+    .plan-feat.off { opacity:.5; }
+    .plan-upgrade {
+      display:block; width:100%; margin-top:16px; padding:10px;
+      background:linear-gradient(135deg,var(--accent),rgba(0,229,180,.8));
+      border:none; border-radius:9px; color:#fff;
+      font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700;
+      cursor:pointer; transition:opacity .2s;
+    }
+    .plan-upgrade:hover { opacity:.85; }
+    .plan-upgrade.outline {
+      background:transparent; border:1px solid var(--border);
+      color:var(--muted);
+    }
+    .plan-upgrade.outline:hover { color:var(--text); border-color:rgba(255,255,255,.15); }
+
+    /* ── DANGER ZONE ── */
+    .danger-item {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:16px; background:rgba(255,107,107,.04); border:1px solid rgba(255,107,107,.1);
+      border-radius:12px; margin-bottom:10px;
+    }
+    .danger-item:last-child { margin-bottom:0; }
+    .danger-label { font-size:14px; font-weight:500; color:#ff6b6b; }
+    .danger-sub   { font-size:12px; color:var(--muted); margin-top:3px; }
+    .danger-btn {
+      padding:9px 18px; background:rgba(255,107,107,.1); border:1px solid rgba(255,107,107,.2);
+      border-radius:10px; color:#ff6b6b; font-family:'DM Sans',sans-serif;
+      font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; white-space:nowrap;
+    }
+    .danger-btn:hover { background:rgba(255,107,107,.2); }
+
+    /* ── KYC / VERIFY ── */
+    .kyc-row { display:flex; align-items:center; justify-content:space-between; padding:14px; background:var(--surface2); border:1px solid var(--border); border-radius:12px; margin-bottom:10px; transition:border-color .2s; }
+    .kyc-row:last-child { margin-bottom:0; }
+    .kyc-row:hover { border-color:rgba(255,255,255,.12); }
+    .kyc-left { display:flex; align-items:center; gap:12px; }
+    .kyc-icon { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:15px; }
+    .kyc-name { font-size:13px; font-weight:500; }
+    .kyc-sub  { font-size:11px; color:var(--muted); margin-top:2px; }
+    .kyc-status { display:inline-flex; align-items:center; gap:5px; padding:5px 12px; border-radius:7px; font-size:11px; font-weight:600; }
+    .kyc-status.done    { background:rgba(0,229,180,.1); border:1px solid rgba(0,229,180,.25); color:var(--accent3); }
+    .kyc-status.pending { background:rgba(251,191,36,.1); border:1px solid rgba(251,191,36,.25); color:#fbbf24; }
+    .kyc-status.none    { background:rgba(255,255,255,.05); border:1px solid var(--border); color:var(--muted); }
+
+    /* toast */
+    .toast { position:fixed; bottom:28px; right:28px; padding:13px 20px; border-radius:12px; font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; z-index:9999; transform:translateY(80px); opacity:0; transition:all .35s cubic-bezier(.34,1.56,.64,1); backdrop-filter:blur(12px); }
+    .toast.show { transform:translateY(0); opacity:1; }
+    .toast.success { background:rgba(0,229,180,.15); border:1px solid rgba(0,229,180,.3); color:var(--accent3); }
+    .toast.error   { background:rgba(255,107,107,.12); border:1px solid rgba(255,107,107,.25); color:#ff6b6b; }
+
+    /* confirm modal */
+    .confirm-overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); backdrop-filter:blur(6px); z-index:900; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .3s; }
+    .confirm-overlay.open { opacity:1; pointer-events:all; }
+    .confirm-box { background:var(--surface); border:1px solid rgba(255,107,107,.2); border-radius:20px; padding:28px; width:380px; max-width:94vw; transform:scale(.95); transition:transform .3s; text-align:center; }
+    .confirm-overlay.open .confirm-box { transform:scale(1); }
+    .confirm-icon { width:56px; height:56px; background:rgba(255,107,107,.1); border:1px solid rgba(255,107,107,.2); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:20px; color:#ff6b6b; margin:0 auto 16px; }
+    .confirm-title { font-family:'Syne',sans-serif; font-size:17px; font-weight:700; margin-bottom:8px; }
+    .confirm-text  { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:22px; }
+    .confirm-btns  { display:flex; gap:10px; justify-content:center; }
+    .cbtn-cancel { padding:10px 22px; background:rgba(255,255,255,.06); border:1px solid var(--border); border-radius:10px; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; }
+    .cbtn-cancel:hover { color:var(--text); }
+    .cbtn-confirm { padding:10px 22px; background:rgba(255,107,107,.15); border:1px solid rgba(255,107,107,.3); border-radius:10px; color:#ff6b6b; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:700; cursor:pointer; transition:all .2s; }
+    .cbtn-confirm:hover { background:rgba(255,107,107,.25); }
+
+    ::-webkit-scrollbar { width:5px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.08); border-radius:3px; }
+
+    @media(max-width:1100px) { .plan-grid{grid-template-columns:1fr 1fr;} }
+    @media(max-width:900px)  { .settings-nav{display:none;} .field-grid{grid-template-columns:1fr;} }
+    @media(max-width:768px)  { :root{--sidebar-w:0px;} .sidebar{transform:translateX(-100%);} .settings-layout{padding:20px 16px;} }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo"><div class="logo-icon">🏪</div><span>VendorHub</span></div>
+  <div class="vendor-pill"><i class="fa fa-store" style="font-size:10px;"></i> Vendor Account</div>
+  <p class="nav-label">My Panel</p>
+  <nav class="menu">
+    <a href="#"><i class="fa fa-gauge-high"></i> Dashboard</a>
+    <a href="#"><i class="fa fa-briefcase"></i> My Services</a>
+    <a href="#"><i class="fa fa-calendar-check"></i> Bookings</a>
+  </nav>
+  <p class="nav-label" style="margin-top:28px;">Account</p>
+  <nav class="menu">
+    <a href="#"><i class="fa fa-circle-user"></i> My Profile</a>
+    <a href="#"><i class="fa fa-chart-bar"></i> Analytics</a>
+    <a href="#" class="active"><i class="fa fa-gear"></i> Settings</a>
+    <a href="#" style="color:#ff6b6b;"><i class="fa fa-right-from-bracket"></i> Logout</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="s-avatar">R</div>
+    <div class="user-info"><div class="name">Rahul Sharma</div><div class="role">Vendor</div></div>
+    <i class="fa fa-ellipsis-vertical" style="color:var(--muted);margin-left:auto;font-size:13px;"></i>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <div class="page-title">Settings</div>
+    <div class="topbar-right">
+      <div class="vendor-badge"><i class="fa fa-circle-check" style="font-size:11px;"></i> Verified</div>
+      <div class="icon-btn"><i class="fa fa-bell" style="font-size:14px;"></i><span class="notif-dot"></span></div>
+      <div class="icon-btn"><i class="fa fa-sliders" style="font-size:14px;"></i></div>
+      <button class="logout-btn"><i class="fa fa-right-from-bracket"></i> Logout</button>
+    </div>
+  </header>
+
+  <div class="settings-layout">
+
+    <!-- LEFT NAV -->
+    <div class="settings-nav">
+      <div class="snav-item active" onclick="scrollTo('secAccount')"><i class="fa fa-circle-user"></i> Account</div>
+      <div class="snav-item" onclick="scrollTo('secNotif')"><i class="fa fa-bell"></i> Notifications</div>
+      <div class="snav-item" onclick="scrollTo('secPassword')"><i class="fa fa-lock"></i> Password</div>
+      <div class="snav-item" onclick="scrollTo('secKyc')"><i class="fa fa-id-card"></i> Verification</div>
+      <div class="snav-item" onclick="scrollTo('secPlan')"><i class="fa fa-crown"></i> Plan & Billing</div>
+      <div class="snav-item" onclick="scrollTo('secAppearance')"><i class="fa fa-palette"></i> Appearance</div>
+      <div class="snav-divider"></div>
+      <div class="snav-item snav-danger" onclick="openConfirm('deactivate')"><i class="fa fa-triangle-exclamation"></i> Danger Zone</div>
+    </div>
+
+    <!-- RIGHT PANELS -->
+    <div class="settings-body">
+
+      <!-- Account Info -->
+      <div class="scard" id="secAccount">
+        <div class="scard-header">
+          <div class="scard-left">
+            <div class="scard-icon" style="background:rgba(0,229,180,.12);color:var(--accent3);"><i class="fa fa-circle-user"></i></div>
+            <div>
+              <div class="scard-title">Account Information</div>
+              <div class="scard-sub">Update your personal and business details</div>
+            </div>
+          </div>
+          <button class="save-btn" onclick="toast('Account saved!')"><i class="fa fa-check"></i> Save</button>
+        </div>
+        <div class="scard-body">
+          <div class="field-grid">
+            <div class="field">
+              <label><i class="fa fa-user"></i> Full Name</label>
+              <input type="text" value="Rahul Sharma" placeholder="Your name">
+            </div>
+            <div class="field">
+              <label><i class="fa fa-store"></i> Business Name</label>
+              <input type="text" value="Rahul Home Services" placeholder="Business name">
+            </div>
+            <div class="field">
+              <label><i class="fa fa-envelope"></i> Email</label>
+              <input type="email" value="rahul@vendorhub.in" placeholder="Email">
+            </div>
+            <div class="field">
+              <label><i class="fa fa-phone"></i> Phone</label>
+              <div class="input-prefix">
+                <span>+91</span>
+                <input type="text" value="98765 43210" style="padding-left:42px;" placeholder="Phone number">
+              </div>
+            </div>
+            <div class="field">
+              <label><i class="fa fa-location-dot"></i> City</label>
+              <input type="text" value="Mumbai" placeholder="Your city">
+            </div>
+            <div class="field">
+              <label><i class="fa fa-map"></i> State</label>
+              <select>
+                <option selected>Maharashtra</option>
+                <option>Delhi</option>
+                <option>Karnataka</option>
+                <option>Tamil Nadu</option>
+                <option>Gujarat</option>
+              </select>
+            </div>
+            <div class="field">
+              <label><i class="fa fa-layer-group"></i> Primary Category</label>
+              <select>
+                <option selected>Home Services</option>
+                <option>Tech Services</option>
+                <option>Beauty & Wellness</option>
+                <option>Fitness</option>
+              </select>
+            </div>
+            <div class="field">
+              <label><i class="fa fa-briefcase"></i> Experience (Years)</label>
+              <input type="number" value="6" min="0" max="50">
+            </div>
+            <div class="field field-full">
+              <label><i class="fa fa-align-left"></i> Bio / About</label>
+              <textarea>Professional home and tech service provider with 6+ years of experience. Specialising in appliance repair, smart home setup, and deep cleaning.</textarea>
+            </div>
+            <div class="field field-full">
+              <label><i class="fa fa-file-invoice"></i> GST Number</label>
+              <input type="text" placeholder="e.g. 27AAAAA0000A1Z5" value="">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div class="scard" id="secNotif">
+        <div class="scard-header">
+          <div class="scard-left">
+            <div class="scard-icon" style="background:rgba(91,110,248,.12);color:var(--accent);"><i class="fa fa-bell"></i></div>
+            <div>
+              <div class="scard-title">Notifications</div>
+              <div class="scard-sub">Choose what alerts you receive</div>
+            </div>
+          </div>
+          <button class="save-btn" onclick="toast('Preferences saved!')"><i class="fa fa-check"></i> Save</button>
+        </div>
+        <div class="scard-body">
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="tname">New Booking Alerts</div>
+              <div class="tsub">Get notified when a customer books your service</div>
+            </div>
+            <label class="toggle"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="tname">Booking Cancellations</div>
+              <div class="tsub">Alert when a customer cancels a booking</div>
+            </div>
+            <label class="toggle"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="tname">New Reviews</div>
+              <div class="tsub">Notify when a customer leaves a review</div>
+            </div>
+            <label class="toggle"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="tname">Payment Received</div>
+              <div class="tsub">Alert when a payment is credited to your account</div>
+            </div>
+            <label class="toggle"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="tname">Weekly Summary</div>
+              <div class="tsub">Weekly digest of your earnings and performance</div>
+            </div>
+            <label class="toggle"><input type="checkbox"><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="tname">Promotional Emails</div>
+              <div class="tsub">Tips, feature announcements and offers from VendorHub</div>
+            </div>
+            <label class="toggle"><input type="checkbox"><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="tname">SMS Notifications</div>
+              <div class="tsub">Receive booking updates via SMS on your registered number</div>
+            </div>
+            <label class="toggle"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="scard" id="secPassword">
+        <div class="scard-header">
+          <div class="scard-left">
+            <div class="scard-icon" style="background:rgba(248,87,166,.12);color:var(--accent2);"><i class="fa fa-lock"></i></div>
+            <div>
+              <div class="scard-title">Password & Security</div>
+              <div class="scard-sub">Manage your password and 2-factor auth</div>
+            </div>
+          </div>
+          <button class="save-btn" onclick="changePassword()"><i class="fa fa-check"></i> Update</button>
+        </div>
+        <div class="scard-body">
+          <div class="field-grid">
+            <div class="field field-full">
+              <label><i class="fa fa-lock"></i> Current Password</label>
+              <input type="password" id="currPass" placeholder="Enter current password">
+            </div>
+            <div class="field">
+              <label><i class="fa fa-key"></i> New Password</label>
+              <input type="password" id="newPass" placeholder="New password">
+            </div>
+            <div class="field">
+              <label><i class="fa fa-key"></i> Confirm Password</label>
+              <input type="password" id="confPass" placeholder="Repeat new password">
+            </div>
+          </div>
+          <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
+            <div class="toggle-row" style="padding-top:0;">
+              <div class="toggle-info">
+                <div class="tname">Two-Factor Authentication</div>
+                <div class="tsub">Add an extra layer of security using OTP on login</div>
+              </div>
+              <label class="toggle"><input type="checkbox"><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-info">
+                <div class="tname">Login Activity Alerts</div>
+                <div class="tsub">Get notified of new logins from unknown devices</div>
+              </div>
+              <label class="toggle"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KYC / Verification -->
+      <div class="scard" id="secKyc">
+        <div class="scard-header">
+          <div class="scard-left">
+            <div class="scard-icon" style="background:rgba(251,191,36,.12);color:#fbbf24;"><i class="fa fa-id-card"></i></div>
+            <div>
+              <div class="scard-title">Identity Verification</div>
+              <div class="scard-sub">Complete KYC to unlock all features and payouts</div>
+            </div>
+          </div>
+        </div>
+        <div class="scard-body">
+          <div class="kyc-row">
+            <div class="kyc-left">
+              <div class="kyc-icon" style="background:rgba(0,229,180,.1);color:var(--accent3);"><i class="fa fa-id-card"></i></div>
+              <div><div class="kyc-name">Aadhaar Card</div><div class="kyc-sub">Government-issued ID</div></div>
+            </div>
+            <div class="kyc-status done"><i class="fa fa-circle-check"></i> Verified</div>
+          </div>
+          <div class="kyc-row">
+            <div class="kyc-left">
+              <div class="kyc-icon" style="background:rgba(0,229,180,.1);color:var(--accent3);"><i class="fa fa-passport"></i></div>
+              <div><div class="kyc-name">PAN Card</div><div class="kyc-sub">Tax identity document</div></div>
+            </div>
+            <div class="kyc-status done"><i class="fa fa-circle-check"></i> Verified</div>
+          </div>
+          <div class="kyc-row">
+            <div class="kyc-left">
+              <div class="kyc-icon" style="background:rgba(251,191,36,.1);color:#fbbf24;"><i class="fa fa-building-columns"></i></div>
+              <div><div class="kyc-name">Bank Account</div><div class="kyc-sub">For payout processing</div></div>
+            </div>
+            <div class="kyc-status pending"><i class="fa fa-clock"></i> Pending</div>
+          </div>
+          <div class="kyc-row">
+            <div class="kyc-left">
+              <div class="kyc-icon" style="background:rgba(255,255,255,.06);color:var(--muted);"><i class="fa fa-file-invoice"></i></div>
+              <div><div class="kyc-name">GST Certificate</div><div class="kyc-sub">Optional for businesses</div></div>
+            </div>
+            <div class="kyc-status none"><i class="fa fa-plus"></i> Upload</div>
+          </div>
+          <div style="margin-top:16px;padding:14px;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.15);border-radius:12px;display:flex;align-items:center;gap:10px;">
+            <i class="fa fa-triangle-exclamation" style="color:#fbbf24;font-size:15px;flex-shrink:0;"></i>
+            <span style="font-size:12px;color:var(--muted);">Add your bank account to enable payouts. Verification takes 1–2 business days.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan & Billing -->
+      <div class="scard" id="secPlan">
+        <div class="scard-header">
+          <div class="scard-left">
+            <div class="scard-icon" style="background:rgba(248,87,166,.12);color:var(--accent2);"><i class="fa fa-crown"></i></div>
+            <div>
+              <div class="scard-title">Plan & Billing</div>
+              <div class="scard-sub">Manage your subscription plan</div>
+            </div>
+          </div>
+        </div>
+        <div class="scard-body">
+          <div class="plan-grid">
+            <div class="plan-card">
+              <div class="plan-name">Free</div>
+              <div class="plan-price">₹0 <span>/ mo</span></div>
+              <div class="plan-features">
+                <div class="plan-feat"><i class="fa fa-check"></i> 3 Active Services</div>
+                <div class="plan-feat"><i class="fa fa-check"></i> Basic Analytics</div>
+                <div class="plan-feat off"><i class="fa fa-xmark"></i> Priority Listing</div>
+                <div class="plan-feat off"><i class="fa fa-xmark"></i> Custom Branding</div>
+              </div>
+              <button class="plan-upgrade outline" disabled style="cursor:default;">Current Plan</button>
+            </div>
+            <div class="plan-card current">
+              <div class="plan-badge-curr">✦ Active</div>
+              <div class="plan-name" style="color:var(--accent3);">Pro</div>
+              <div class="plan-price">₹499 <span>/ mo</span></div>
+              <div class="plan-features">
+                <div class="plan-feat"><i class="fa fa-check"></i> 20 Active Services</div>
+                <div class="plan-feat"><i class="fa fa-check"></i> Full Analytics</div>
+                <div class="plan-feat"><i class="fa fa-check"></i> Priority Listing</div>
+                <div class="plan-feat off"><i class="fa fa-xmark"></i> Custom Branding</div>
+              </div>
+              <button class="plan-upgrade outline" style="cursor:default;">Current Plan</button>
+            </div>
+            <div class="plan-card">
+              <div class="plan-name">Business</div>
+              <div class="plan-price">₹999 <span>/ mo</span></div>
+              <div class="plan-features">
+                <div class="plan-feat"><i class="fa fa-check"></i> Unlimited Services</div>
+                <div class="plan-feat"><i class="fa fa-check"></i> Advanced Analytics</div>
+                <div class="plan-feat"><i class="fa fa-check"></i> Priority Listing</div>
+                <div class="plan-feat"><i class="fa fa-check"></i> Custom Branding</div>
+              </div>
+              <button class="plan-upgrade" onclick="toast('Upgrade flow coming soon!')">Upgrade Now</button>
+            </div>
+          </div>
+          <div style="margin-top:16px;padding:16px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+            <div>
+              <div style="font-size:13px;font-weight:500;">Next billing date</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px;">1 May 2026 — ₹499 will be charged to card ending 4242</div>
+            </div>
+            <button style="padding:9px 18px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:10px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;" onclick="toast('Billing portal opening...')">Manage Billing</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appearance -->
+      <div class="scard" id="secAppearance">
+        <div class="scard-header">
+          <div class="scard-left">
+            <div class="scard-icon" style="background:rgba(91,110,248,.12);color:var(--accent);"><i class="fa fa-palette"></i></div>
+            <div>
+              <div class="scard-title">Appearance</div>
+              <div class="scard-sub">Customize your dashboard look</div>
+            </div>
+          </div>
+          <button class="save-btn" onclick="toast('Appearance saved!')"><i class="fa fa-check"></i> Save</button>
+        </div>
+        <div class="scard-body">
+          <div class="toggle-row" style="padding-top:0;">
+            <div class="toggle-info">
+              <div class="tname">Dark Mode</div>
+              <div class="tsub">Use dark theme across the dashboard</div>
+            </div>
+            <label class="toggle"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="tname">Compact Sidebar</div>
+              <div class="tsub">Show only icons in the sidebar to save space</div>
+            </div>
+            <label class="toggle"><input type="checkbox"><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="tname">Animations</div>
+              <div class="tsub">Enable motion effects and transitions</div>
+            </div>
+            <label class="toggle"><input type="checkbox" checked><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+          </div>
+          <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border);">
+            <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:12px;">Accent Color</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <div onclick="setAccent(this,'#00e5b4')" class="acc-swatch" style="width:36px;height:36px;border-radius:9px;background:#00e5b4;cursor:pointer;border:3px solid rgba(0,229,180,.6);transition:transform .2s;" title="Teal"></div>
+              <div onclick="setAccent(this,'#5b6ef8')" class="acc-swatch" style="width:36px;height:36px;border-radius:9px;background:#5b6ef8;cursor:pointer;border:2px solid var(--border);transition:transform .2s;" title="Indigo"></div>
+              <div onclick="setAccent(this,'#f857a6')" class="acc-swatch" style="width:36px;height:36px;border-radius:9px;background:#f857a6;cursor:pointer;border:2px solid var(--border);transition:transform .2s;" title="Pink"></div>
+              <div onclick="setAccent(this,'#fbbf24')" class="acc-swatch" style="width:36px;height:36px;border-radius:9px;background:#fbbf24;cursor:pointer;border:2px solid var(--border);transition:transform .2s;" title="Amber"></div>
+              <div onclick="setAccent(this,'#a78bfa')" class="acc-swatch" style="width:36px;height:36px;border-radius:9px;background:#a78bfa;cursor:pointer;border:2px solid var(--border);transition:transform .2s;" title="Purple"></div>
+              <div onclick="setAccent(this,'#34d399')" class="acc-swatch" style="width:36px;height:36px;border-radius:9px;background:#34d399;cursor:pointer;border:2px solid var(--border);transition:transform .2s;" title="Emerald"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="scard" id="secDanger" style="border-color:rgba(255,107,107,.15);">
+        <div class="scard-header" style="border-color:rgba(255,107,107,.1);">
+          <div class="scard-left">
+            <div class="scard-icon" style="background:rgba(255,107,107,.1);color:#ff6b6b;"><i class="fa fa-triangle-exclamation"></i></div>
+            <div>
+              <div class="scard-title" style="color:#ff6b6b;">Danger Zone</div>
+              <div class="scard-sub">These actions are irreversible. Proceed carefully.</div>
+            </div>
+          </div>
+        </div>
+        <div class="scard-body">
+          <div class="danger-item">
+            <div>
+              <div class="danger-label">Deactivate Account</div>
+              <div class="danger-sub">Temporarily hide your profile and services from customers</div>
+            </div>
+            <button class="danger-btn" onclick="openConfirm('deactivate')">Deactivate</button>
+          </div>
+          <div class="danger-item">
+            <div>
+              <div class="danger-label">Delete All Services</div>
+              <div class="danger-sub">Permanently remove all your listed services</div>
+            </div>
+            <button class="danger-btn" onclick="openConfirm('delete-services')">Delete Services</button>
+          </div>
+          <div class="danger-item">
+            <div>
+              <div class="danger-label">Delete Account</div>
+              <div class="danger-sub">Permanently delete your VendorHub account and all data</div>
+            </div>
+            <button class="danger-btn" onclick="openConfirm('delete-account')">Delete Account</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-icon"><i class="fa fa-triangle-exclamation"></i></div>
+    <div class="confirm-title" id="confirmTitle">Are you sure?</div>
+    <div class="confirm-text" id="confirmText">This action cannot be undone.</div>
+    <div class="confirm-btns">
+      <button class="cbtn-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="cbtn-confirm" id="confirmBtn" onclick="doConfirm()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── Toast ──
+  function toast(msg, type='success') {
+    const t = document.getElementById('toast');
+    t.innerHTML = (type === 'success' ? '✓ ' : '✕ ') + msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ── Scroll to section ──
+  function scrollTo(id) {
+    document.getElementById(id)?.scrollIntoView({ behavior:'smooth', block:'start' });
+    document.querySelectorAll('.snav-item').forEach(el => el.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+  }
+
+  // ── Password change ──
+  function changePassword() {
+    const curr = document.getElementById('currPass').value;
+    const np   = document.getElementById('newPass').value;
+    const cp   = document.getElementById('confPass').value;
+    if (!curr) { toast('Enter your current password','error'); return; }
+    if (np.length < 6) { toast('New password must be at least 6 characters','error'); return; }
+    if (np !== cp) { toast('Passwords do not match','error'); return; }
+    toast('Password updated successfully!');
+    document.getElementById('currPass').value = '';
+    document.getElementById('newPass').value  = '';
+    document.getElementById('confPass').value = '';
+  }
+
+  // ── Accent swatch ──
+  function setAccent(el, color) {
+    document.querySelectorAll('.acc-swatch').forEach(s => {
+      s.style.border = '2px solid var(--border)';
+      s.style.transform = 'scale(1)';
+    });
+    el.style.border = `3px solid ${color}`;
+    el.style.transform = 'scale(1.15)';
+    document.documentElement.style.setProperty('--accent3', color);
+    toast('Accent color updated!');
+  }
+
+  // ── Confirm modal ──
+  let pendingAction = null;
+  const confirmCopy = {
+    'deactivate': {
+      title:'Deactivate Account?',
+      text:'Your profile and services will be hidden from customers. You can reactivate anytime.',
+      btn:'Deactivate'
+    },
+    'delete-services': {
+      title:'Delete All Services?',
+      text:'All your listed services will be permanently deleted. This cannot be undone.',
+      btn:'Delete Services'
+    },
+    'delete-account': {
+      title:'Delete Account Permanently?',
+      text:'Your account, services, bookings and all data will be erased forever. This is irreversible.',
+      btn:'Delete Account'
+    }
+  };
+
+  function openConfirm(action) {
+    pendingAction = action;
+    const c = confirmCopy[action];
+    document.getElementById('confirmTitle').textContent = c.title;
+    document.getElementById('confirmText').textContent  = c.text;
+    document.getElementById('confirmBtn').textContent   = c.btn;
+    document.getElementById('confirmOverlay').classList.add('open');
+  }
+
+  function closeConfirm() {
+    document.getElementById('confirmOverlay').classList.remove('open');
+    pendingAction = null;
+  }
+
+  function doConfirm() {
+    closeConfirm();
+    if (pendingAction === 'deactivate')       toast('Account deactivated.');
+    else if (pendingAction === 'delete-services') toast('All services deleted.','error');
+    else if (pendingAction === 'delete-account')  toast('Account deleted. Redirecting…','error');
+  }
+
+  document.getElementById('confirmOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeConfirm();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeConfirm(); });
+</script>
+</body>
+</html>

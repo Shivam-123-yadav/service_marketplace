@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | ServiceHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+
+<!-- LEFT -->
+<div class="left">
+  <div class="brand">
+    <div class="brand-icon">⚡</div>
+    ServiceHub
+  </div>
+
+  <div class="left-content">
+    <div class="left-eyebrow"><i class="fa fa-bolt"></i> Welcome Back</div>
+    <h1>Login to Your <span class="grad">Dashboard</span></h1>
+    <p>Manage your bookings, services, and profile — all in one beautifully designed platform.</p>
+
+    <div class="perks">
+      <div class="perk">
+        <div class="perk-icon" style="background:rgba(91,110,248,.15);color:var(--accent);"><i class="fa fa-gauge-high"></i></div>
+        <div><p>Role-Based Dashboard</p><span>Admin, Vendor & Customer views</span></div>
+      </div>
+      <div class="perk">
+        <div class="perk-icon" style="background:rgba(0,229,180,.12);color:var(--accent3);"><i class="fa fa-calendar-check"></i></div>
+        <div><p>Manage Bookings</p><span>Track and update in real-time</span></div>
+      </div>
+      <div class="perk">
+        <div class="perk-icon" style="background:rgba(248,87,166,.12);color:var(--accent2);"><i class="fa fa-shield-halved"></i></div>
+        <div><p>Secure & Private</p><span>JWT auth with encrypted data</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT -->
+<div class="right">
+  <div class="form-box">
+    <div class="form-head">
+      <h2>Sign In 👋</h2>
+      <p>Enter your credentials to access your account</p>
+    </div>
+
+    <div class="social-btns">
+      <button class="social-login"><i class="fab fa-google" style="color:#ea4335;"></i> Google</button>
+      <button class="social-login"><i class="fab fa-github"></i> GitHub</button>
+    </div>
+
+    <div class="divider"><span>or continue with email</span></div>
+
+    <!-- Error Message Display -->
+    <div id="error-message" style="
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      background: rgba(255,107,107,.12);
+      border: 1px solid rgba(255,107,107,.25);
+      border-radius: 10px;
+      color: #ff6b6b;
+      font-size: 13px;
+      display: none;
+      text-align: center;
+    "></div>
+
+    <!-- Login Form -->
+    <form id="login-form">
+      <!-- Email -->
+      <div class="field">
+        <label>Email Address</label>
+        <div class="input-wrap">
+          <i class="fa fa-envelope"></i>
+          <input type="email" id="email" placeholder="you@example.com" required />
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="field">
+        <div class="field-meta">
+          <label>Password</label>
+          <a href="#" class="forgot">Forgot password?</a>
+        </div>
+        <div class="input-wrap">
+          <i class="fa fa-lock"></i>
+          <input type="password" id="password" placeholder="Enter your password" required />
+          <i class="eye-toggle fa fa-eye" id="eyeToggle" onclick="toggleEye()"></i>
+        </div>
+      </div>
+
+      <button type="submit" class="login-btn submit-btn" id="loginBtn">
+        <i class="fa fa-arrow-right-to-bracket"></i> Login
+      </button>
+    </form>
+
+    <div class="register-link">
+      Don't have an account? <a href="/api/users/register-page/">Create one →</a>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="{% static 'js/auth.js' %}"></script>
+</body>
+</html>

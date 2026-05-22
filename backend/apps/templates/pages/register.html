@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register | ServiceHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/register.css' %}">
+
+</head>
+<body>
+
+<!-- LEFT -->
+<div class="left">
+  <div class="brand">
+    <div class="brand-icon">⚡</div>
+    ServiceHub
+  </div>
+
+  <div class="left-content">
+    <div class="left-eyebrow"><i class="fa fa-rocket"></i> Get Started Free</div>
+    <h1>Join as a <span class="grad">Customer or Vendor</span></h1>
+    <p>Create your account and start booking services or grow your business — all in one platform.</p>
+
+    <div class="role-cards">
+      <div class="role-option active" id="leftCustomer" onclick="selectLeftRole('customer')">
+        <div class="role-icon" style="background:rgba(248,87,166,.12);color:var(--accent2);"><i class="fa fa-user"></i></div>
+        <div class="role-texts">
+          <div class="name">Customer</div>
+          <div class="desc">Browse & book services near you</div>
+        </div>
+        <div class="role-check"><i class="fa fa-check"></i></div>
+      </div>
+      <div class="role-option" id="leftVendor" onclick="selectLeftRole('vendor')">
+        <div class="role-icon" style="background:rgba(0,229,180,.12);color:var(--accent3);"><i class="fa fa-store"></i></div>
+        <div class="role-texts">
+          <div class="name">Service Vendor</div>
+          <div class="desc">List your services & earn money</div>
+        </div>
+        <div class="role-check"><i class="fa fa-check"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT -->
+<div class="right">
+  <div class="form-box">
+    <div class="form-head">
+      <h2>Create Account 🚀</h2>
+      <p>Fill in your details to get started in seconds</p>
+    </div>
+
+    <!-- progress -->
+    <div class="progress-steps" id="progressSteps">
+      <div class="step-dot active" id="s1">1</div>
+      <div class="step-line"><div class="fill" id="line1"></div></div>
+      <div class="step-dot" id="s2">2</div>
+      <div class="step-line"><div class="fill" id="line2"></div></div>
+      <div class="step-dot" id="s3">3</div>
+    </div>
+
+    <!-- Name -->
+    <div class="field">
+      <label>Full Name</label>
+      <div class="input-wrap">
+        <i class="ico fa fa-user"></i>
+        <input type="text" id="name" placeholder="Your full name" oninput="updateProgress()" />
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="field">
+      <label>Email Address</label>
+      <div class="input-wrap">
+        <i class="ico fa fa-envelope"></i>
+        <input type="email" id="email" placeholder="you@example.com" oninput="updateProgress()" />
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="field">
+      <label>Password</label>
+      <div class="input-wrap">
+        <i class="ico fa fa-lock"></i>
+        <input type="password" id="password" placeholder="Create a strong password" oninput="checkStrength(); updateProgress()" />
+        <i class="eye-toggle fa fa-eye" id="eyeToggle" onclick="toggleEye()"></i>
+      </div>
+      <div class="strength-wrap">
+        <div class="strength-bar">
+          <div class="bar-seg" id="b1"></div>
+          <div class="bar-seg" id="b2"></div>
+          <div class="bar-seg" id="b3"></div>
+          <div class="bar-seg" id="b4"></div>
+        </div>
+        <div class="strength-label" id="strengthLabel">Password strength</div>
+      </div>
+    </div>
+
+    <!-- Role -->
+    <div class="field">
+      <label>Select Role</label>
+      <div class="role-toggle">
+        <button class="role-tab active" id="tabCustomer" onclick="selectRole('customer')">
+          <i class="fa fa-user"></i> Customer
+        </button>
+        <button class="role-tab" id="tabVendor" onclick="selectRole('vendor')">
+          <i class="fa fa-store"></i> Vendor
+        </button>
+      </div>
+      <input type="hidden" id="role" value="customer" />
+    </div>
+
+    <button class="submit-btn" id="registerBtn">
+      <i class="fa fa-user-plus"></i> Create Account
+    </button>
+
+    <p class="terms">By registering, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+
+    <div class="login-link">
+      Already have an account? <a href="/api/users/login-page/">Sign in →</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="{% static 'js/auth.js' %}"></script>
+</body>
+</html>

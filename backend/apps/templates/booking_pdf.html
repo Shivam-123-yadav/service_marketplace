@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Booking Confirmation – ServiceHub</title>
+<style>
+  /* ── Page setup ── */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0d0f14;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #eef0f8;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 28px;
+  }
+
+  /* ── Ambient top wash ── */
+  .top-wash {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 180px;
+    background: linear-gradient(180deg, rgba(91,110,248,.18) 0%, transparent 100%);
+    z-index: 0;
+  }
+
+  .page-wrap { position: relative; z-index: 1; }
+
+  /* ══════════════════════════════════════
+     HEADER CARD
+  ══════════════════════════════════════ */
+  .header {
+    background: #141720;
+    border-radius: 16px 16px 0 0;
+    border: 1px solid #1e2238;
+    border-bottom: none;
+    padding: 24px 28px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* left teal accent stripe */
+  .header::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #5b6ef8, #00e5b4);
+    border-radius: 2px 0 0 2px;
+  }
+
+  /* Brand row */
+  .brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #5b6ef8, #00e5b4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 900; color: #fff;
+  }
+
+  .brand-name {
+    font-size: 18px; font-weight: 700;
+    color: #eef0f8; letter-spacing: -.3px;
+  }
+
+  .brand-sub {
+    font-size: 10px; color: #6b7080; margin-top: 2px;
+  }
+
+  .bid-badge {
+    background: #1c2030;
+    border: 1px solid #2a2e45;
+    border-radius: 10px;
+    padding: 8px 14px;
+    text-align: right;
+  }
+
+  .bid-label {
+    font-size: 8px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: #00e5b4; display: block; margin-bottom: 3px;
+  }
+
+  .bid-val {
+    font-size: 12px; font-weight: 700; color: #eef0f8;
+  }
+
+  /* Confirmed row */
+  .confirmed-row {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  }
+
+  .check-circle {
+    width: 42px; height: 42px; border-radius: 50%;
+    background: #0d2420;
+    border: 1.5px solid rgba(0,229,180,.4);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .check-circle svg { width: 18px; height: 18px; }
+
+  .confirmed-title {
+    font-size: 20px; font-weight: 700;
+    color: #eef0f8; letter-spacing: -.3px;
+  }
+
+  .confirmed-sub {
+    font-size: 11px; color: #6b7080; margin-top: 3px;
+  }
+
+  /* ══════════════════════════════════════
+     SERVICE BAND
+  ══════════════════════════════════════ */
+  .svc-band {
+    background: linear-gradient(135deg, rgba(91,110,248,.14), rgba(0,229,180,.08));
+    border: 1px solid #1e2238;
+    border-top: 3px solid #00e5b4;
+    border-bottom: none;
+    padding: 15px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .svc-left { display: flex; align-items: center; gap: 12px; }
+
+  .svc-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: #232840;
+    border: 1px solid #2a2e45;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+
+  .svc-name { font-size: 15px; font-weight: 700; color: #eef0f8; }
+  .svc-cat  { font-size: 10px; color: #6b7080; margin-top: 3px; }
+
+  .price-badge {
+    background: #141720;
+    border: 1px solid #2a2e45;
+    border-radius: 10px;
+    padding: 8px 14px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .price-amt  { font-size: 18px; font-weight: 700; color: #00e5b4; }
+  .price-lbl  { font-size: 9px; color: #6b7080; margin-top: 2px; }
+
+  /* ══════════════════════════════════════
+     DETAIL CARDS
+  ══════════════════════════════════════ */
+  .section-wrap {
+    background: #141720;
+    border: 1px solid #1e2238;
+    border-top: none;
+    border-bottom: none;
+    padding: 18px 28px;
+  }
+
+  .section-heading {
+    font-size: 8.5px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: #00e5b4;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #1e2238;
+    margin-bottom: 12px;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .detail-card {
+    background: #1c2030;
+    border: 1px solid #1e2238;
+    border-radius: 10px;
+    padding: 11px 13px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .dc-icon {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: #232840;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0; margin-top: 1px;
+  }
+
+  .dc-label {
+    font-size: 8px; font-weight: 700;
+    letter-spacing: .07em; text-transform: uppercase;
+    color: #6b7080; display: block; margin-bottom: 4px;
+  }
+
+  .dc-val {
+    font-size: 12px; font-weight: 700;
+    color: #eef0f8; word-break: break-word;
+  }
+
+  /* ══════════════════════════════════════
+     LOCATION CARD
+  ══════════════════════════════════════ */
+  .loc-wrap {
+    background: #141720;
+    border: 1px solid #1e2238;
+    border-top: none; border-bottom: none;
+    padding: 0 28px 18px;
+  }
+
+  .loc-card {
+    background: #1c2030;
+    border: 1px solid #1e2238;
+    border-radius: 10px;
+    padding: 13px 15px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+  }
+
+  .loc-pin {
+    width: 34px; height: 34px; border-radius: 9px;
+    background: linear-gradient(135deg, #5b6ef8, #a78bfa);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+
+  .loc-label { font-size: 8px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #6b7080; margin-bottom: 3px; }
+  .loc-val   { font-size: 11px; color: #eef0f8; line-height: 1.5; }
+
+  /* ══════════════════════════════════════
+     BARCODE STRIP
+  ══════════════════════════════════════ */
+  .barcode-wrap {
+    background: #141720;
+    border: 1px solid #1e2238;
+    border-top: none; border-bottom: none;
+    padding: 0 28px 18px;
+  }
+
+  .barcode-card {
+    background: #1c2030;
+    border: 1px solid #1e2238;
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .barcode-left { flex: 1; }
+  .barcode-hint { font-size: 8px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #6b7080; margin-bottom: 8px; }
+
+  .bars { display: flex; align-items: flex-end; gap: 2px; height: 34px; }
+
+  .barcode-right { text-align: center; flex-shrink: 0; }
+
+  .qr-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 7px);
+    grid-template-rows: repeat(7, 7px);
+    gap: 1px;
+    margin-bottom: 5px;
+  }
+
+  .qc { width: 7px; height: 7px; border-radius: 1px; background: #232840; }
+  .qc.on { background: #c0c8e8; }
+  .qc.on.corner { background: #00e5b4; }
+
+  .qr-label { font-size: 7.5px; color: #6b7080; font-weight: 700; letter-spacing: .04em; }
+
+  .divider-v {
+    width: 1px; align-self: stretch;
+    background: repeating-linear-gradient(to bottom, #2a2e45 0, #2a2e45 4px, transparent 4px, transparent 9px);
+  }
+
+  /* ══════════════════════════════════════
+     INSTRUCTIONS
+  ══════════════════════════════════════ */
+  .ins-wrap {
+    background: #141720;
+    border: 1px solid #1e2238;
+    border-top: none; border-bottom: none;
+    padding: 0 28px 18px;
+  }
+
+  .ins-card {
+    background: #1c2030;
+    border: 1px solid #1e2238;
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+
+  .ins-title {
+    font-size: 8.5px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: #00e5b4; margin-bottom: 10px;
+  }
+
+  .ins-item {
+    display: flex; align-items: flex-start; gap: 9px;
+    font-size: 10.5px; color: #6b7080;
+    line-height: 1.5; padding: 3px 0;
+  }
+
+  .ins-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #5b6ef8; flex-shrink: 0; margin-top: 5px;
+  }
+
+  /* ══════════════════════════════════════
+     FOOTER
+  ══════════════════════════════════════ */
+  .footer {
+    background: #1c2030;
+    border: 1px solid #1e2238;
+    border-top: 1px solid #1e2238;
+    border-radius: 0 0 16px 16px;
+    padding: 14px 28px;
+    text-align: center;
+  }
+
+  .footer p { font-size: 9px; color: #6b7080; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<div class="top-wash"></div>
+
+<div class="page-wrap">
+
+  <!-- ══ HEADER ══ -->
+  <div class="header">
+    <div class="brand-row">
+      <div class="brand">
+        <div class="brand-icon">S</div>
+        <div>
+          <div class="brand-name">ServiceHub</div>
+          <div class="brand-sub">Book &middot; Relax &middot; Done</div>
+        </div>
+      </div>
+      <div class="bid-badge">
+        <span class="bid-label">Booking ID</span>
+        <span class="bid-val">{{ booking_id }}</span>
+      </div>
+    </div>
+
+    <div class="confirmed-row">
+      <div class="check-circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00e5b4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <div>
+        <div class="confirmed-title">Booking Confirmed!</div>
+        <div class="confirmed-sub">Hi {{ customer_name }}, your appointment is all set &mdash; see details below.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SERVICE BAND ══ -->
+  <div class="svc-band">
+    <div class="svc-left">
+      <div class="svc-icon">&#9733;</div>
+      <div>
+        <div class="svc-name">{{ service_name }}</div>
+        <div class="svc-cat">{{ service_category }}</div>
+      </div>
+    </div>
+    <div class="price-badge">
+      <div class="price-amt">{{ total_price }}</div>
+      <div class="price-lbl">Total Amount</div>
+    </div>
+  </div>
+
+  <!-- ══ APPOINTMENT DETAILS ══ -->
+  <div class="section-wrap">
+    <div class="section-heading">&#9632;&nbsp; Appointment Details</div>
+    <div class="grid-2">
+
+      <div class="detail-card">
+        <div class="dc-icon" style="color:#00e5b4">&#128197;</div>
+        <div>
+          <span class="dc-label">Date</span>
+          <span class="dc-val">{{ booking_date }}</span>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <div class="dc-icon" style="color:#5b6ef8">&#128336;</div>
+        <div>
+          <span class="dc-label">Time</span>
+          <span class="dc-val">{{ booking_time }}</span>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <div class="dc-icon" style="color:#a78bfa">&#9203;</div>
+        <div>
+          <span class="dc-label">Duration</span>
+          <span class="dc-val">{{ duration }}</span>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <div class="dc-icon" style="color:#00e5b4">&#128188;</div>
+        <div>
+          <span class="dc-label">Provider</span>
+          <span class="dc-val">{{ provider_name }}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ CUSTOMER DETAILS ══ -->
+  <div class="section-wrap" style="padding-top: 0">
+    <div class="section-heading">&#9632;&nbsp; Customer Details</div>
+    <div class="grid-2">
+
+      <div class="detail-card">
+        <div class="dc-icon" style="color:#5b6ef8">&#128100;</div>
+        <div>
+          <span class="dc-label">Name</span>
+          <span class="dc-val">{{ customer_name }}</span>
+        </div>
+      </div>
+
+      <div class="detail-card">
+        <div class="dc-icon" style="color:#00e5b4">&#9993;</div>
+        <div>
+          <span class="dc-label">Email</span>
+          <span class="dc-val" style="font-size:11px">{{ user_email }}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ LOCATION ══ -->
+  <div class="loc-wrap">
+    <div class="loc-card">
+      <div class="loc-pin">&#128205;</div>
+      <div>
+        <div class="loc-label">Location</div>
+        <div class="loc-val">{{ location }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BARCODE STRIP ══ -->
+  <div class="barcode-wrap">
+    <div class="barcode-card">
+      <div class="barcode-left">
+        <div class="barcode-hint">Scan or show at venue</div>
+        <div class="bars" id="bars"></div>
+      </div>
+      <div class="divider-v"></div>
+      <div class="barcode-right">
+        <!-- QR pattern (static decorative) -->
+        <div class="qr-grid">
+          <!-- row 0 -->
+          <div class="qc on corner"></div><div class="qc on corner"></div><div class="qc on corner"></div><div class="qc on corner"></div><div class="qc on corner"></div><div class="qc on corner"></div><div class="qc on corner"></div>
+          <!-- row 1 -->
+          <div class="qc on corner"></div><div class="qc"></div><div class="qc"></div><div class="qc"></div><div class="qc"></div><div class="qc"></div><div class="qc on corner"></div>
+          <!-- row 2 -->
+          <div class="qc on corner"></div><div class="qc"></div><div class="qc on"></div><div class="qc"></div><div class="qc on"></div><div class="qc"></div><div class="qc on corner"></div>
+          <!-- row 3 -->
+          <div class="qc on corner"></div><div class="qc"></div><div class="qc"></div><div class="qc on"></div><div class="qc"></div><div class="qc"></div><div class="qc on corner"></div>
+          <!-- row 4 -->
+          <div class="qc on corner"></div><div class="qc"></div><div class="qc on"></div><div class="qc"></div><div class="qc on"></div><div class="qc"></div><div class="qc on corner"></div>
+          <!-- row 5 -->
+          <div class="qc on corner"></div><div class="qc"></div><div class="qc"></div><div class="qc"></div><div class="qc"></div><div class="qc"></div><div class="qc on corner"></div>
+          <!-- row 6 -->
+          <div class="qc on corner"></div><div class="qc on corner"></div><div class="qc on corner"></div><div class="qc on corner"></div><div class="qc on corner"></div><div class="qc on corner"></div><div class="qc on corner"></div>
+        </div>
+        <div class="qr-label">QR CODE</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ INSTRUCTIONS ══ -->
+  <div class="ins-wrap">
+    <div class="ins-card">
+      <div class="ins-title">&#9432;&nbsp; Important Instructions</div>
+      <div class="ins-item"><div class="ins-dot"></div><span>Please arrive 5&ndash;10 minutes before your scheduled appointment time.</span></div>
+      <div class="ins-item"><div class="ins-dot"></div><span>Carry a valid government-issued photo ID for verification at the venue.</span></div>
+      <div class="ins-item"><div class="ins-dot"></div><span>Cancellations must be made at least 2 hours in advance to avoid charges.</span></div>
+    </div>
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <div class="footer">
+    <p>
+      &copy; 2025 ServiceHub &nbsp;&bull;&nbsp; support@servicehub.in &nbsp;&bull;&nbsp; All rights reserved
+    </p>
+    <p>This document was generated for {{ user_email }} on {{ booking_date }}.</p>
+  </div>
+
+</div>
+
+<!-- Barcode bars — JS for HTML preview only (WeasyPrint ignores JS) -->
+<script>
+  const bars = document.getElementById('bars');
+  if (bars) {
+    const w = [3,1,2,1,4,1,2,1,1,3,2,1,3,1,2,1,4,1,2,1,1,3,2,1];
+    const cols = ['#00e5b4','#5b6ef8','#3a4060'];
+    w.forEach((bw,i) => {
+      const d = document.createElement('div');
+      d.style.cssText = `width:${bw*4}px;height:${16+(i%3)*5}px;background:${cols[i%3]};border-radius:2px 2px 0 0;opacity:.85`;
+      bars.appendChild(d);
+    });
+  }
+</script>
+
+</body>
+</html>

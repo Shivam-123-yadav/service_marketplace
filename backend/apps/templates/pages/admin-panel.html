@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel | ServiceApp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/admin-panel.css' %}">
+</head>
+<body>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <span>ServiceApp</span>
+  </div>
+
+  <p class="nav-label">Main Menu</p>
+  <nav class="menu">
+    <a href="/api/users/dashboard-page/"><i class="fa fa-gauge-high"></i> Dashboard</a>
+    <a href="/api/users/admin-page/" class="active"><i class="fa fa-user-shield"></i> Admin Panel</a>
+    <a href="/api/users/services-page/"><i class="fa fa-briefcase"></i> Services</a>
+    <a href="/api/users/booking-page/"><i class="fa fa-calendar-check"></i> Bookings</a>
+    <a href="/api/users/customer-page/"><i class="fa fa-users"></i> Customers</a>
+  </nav>
+
+  <p class="nav-label" style="margin-top:28px;">Settings</p>
+  <nav class="menu">
+    <a href="#"><i class="fa fa-chart-bar"></i> Reports</a>
+    <a href="#"><i class="fa fa-shield-halved"></i> Permissions</a>
+    <a href="#"><i class="fa fa-gear"></i> Settings</a>
+    <a href="#" onclick="logout()" style="color:#ff6b6b;"><i class="fa fa-right-from-bracket"></i> Logout</a>
+
+
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="avatar">A</div>
+    <div class="user-info">
+      <div class="name" id="userName">Admin User</div>
+      <div class="role" id="userRole">Super Admin</div>
+    </div>
+    <i class="fa fa-ellipsis-vertical" style="color:var(--muted);margin-left:auto;font-size:13px;"></i>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="page-title">Admin Panel</div>
+    <div class="topbar-right">
+      <div class="role-pill"><i class="fa fa-user-shield"></i> Super Admin</div>
+      <div class="icon-btn">
+        <i class="fa fa-bell" style="font-size:14px;"></i>
+        <span class="notif-dot"></span>
+      </div>
+      <div class="icon-btn"><i class="fa fa-sliders" style="font-size:14px;"></i></div>
+      <button class="logout-btn" onclick="logout()"><i class="fa fa-right-from-bracket"></i> Logout</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(91,110,248,.15);color:var(--accent);"><i class="fa fa-users"></i></div>
+        <div class="stat-info">
+          <div class="val" id="totalUsers">0</div>
+          <div class="lbl">Total Users</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(0,229,180,.12);color:var(--accent3);"><i class="fa fa-briefcase"></i></div>
+        <div class="stat-info">
+          <div class="val" id="totalServices">0</div>
+          <div class="lbl">Services</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(248,87,166,.12);color:var(--accent2);"><i class="fa fa-calendar-check"></i></div>
+        <div class="stat-info">
+          <div class="val" id="totalBookings">0</div>
+          <div class="lbl">Bookings</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(251,191,36,.12);color:#fbbf24;"><i class="fa fa-clock"></i></div>
+        <div class="stat-info">
+          <div class="val" id="totalPending">0</div>
+          <div class="lbl">Pending</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Row -->
+    <div class="tabs-wrap">
+      <div class="tabs">
+        <button class="active" onclick="showTab('users', this)">
+          <i class="fa fa-users"></i> Users
+        </button>
+        <button onclick="showTab('services', this)">
+          <i class="fa fa-briefcase"></i> Services
+        </button>
+        <button onclick="showTab('bookings', this)">
+          <i class="fa fa-calendar-check"></i> Bookings
+        </button>
+      </div>
+      <div class="tab-right">
+        <div class="search-bar">
+          <i class="fa fa-search"></i>
+          <input type="text" id="searchInput" placeholder="Search…" oninput="handleSearch()" />
+        </div>
+        <button class="add-btn" onclick="openAddModal()">
+  <i class="fa fa-plus"></i> Add New
+</button>
+      </div>
+    </div>
+
+    <div id="addModal">
+  <div class="add-modal-box">
+
+    <div class="add-modal-banner">
+      <div class="add-modal-icon"><i class="fa fa-user-plus"></i></div>
+      <button class="add-modal-close" onclick="closeAddModal()">
+        <i class="fa fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="add-modal-body">
+      <div id="modalTitle">Add User</div>
+      <div class="add-modal-sub">Fill in the details below to continue</div>
+      <div id="formFields"></div>
+    </div>
+
+    <div class="add-modal-footer">
+      <div class="add-footer-hint"><kbd>ESC</kbd> to cancel</div>
+      <div class="add-btn-group">
+        <button class="add-btn-cancel" onclick="closeAddModal()">Cancel</button>
+        <!-- <button class="add-btn-submit" onclick="submitAddForm()"> -->
+          <!-- <i class="fa fa-check"></i> Save -->
+        <!-- </button> -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+    <!-- Table Panel -->
+    <div class="panel">
+      <table>
+        <thead><tr id="tableHead"></tr></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+
+    
+
+  </div>
+</div>
+
+<script src="{% static 'js/admin-panel.js' %}"></script>
+
+</body>
+</html>

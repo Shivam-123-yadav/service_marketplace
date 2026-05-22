@@ -1,0 +1,503 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile | VendorHub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="{% static 'css/vendor_profile.css' %}">
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-icon">🏪</div>
+    <span>VendorHub</span>
+  </div>
+
+  <div class="vendor-pill"><i class="fa fa-store" style="font-size:10px;"></i> Vendor Account</div>
+
+  <p class="nav-label">My Panel</p>
+  <nav class="menu">
+    <a href="/api/users/vendor-page/"><i class="fa fa-gauge-high"></i> Dashboard</a>
+    <a href="/api/users/vendor-page/" onclick="window.location.href='/api/users/vendor-page/'"><i class="fa fa-briefcase"></i> My Services</a>
+    <a href="/api/users/vendor-page/" onclick="window.location.href='/api/users/vendor-page/'"><i class="fa fa-calendar-check"></i> Bookings</a>
+  </nav>
+
+  <p class="nav-label" style="margin-top:28px;">Account</p>
+  <nav class="menu">
+    <a href="#" class="active"><i class="fa fa-circle-user"></i> My Profile</a>
+    <a href="/api/users/vendor-analytics/"><i class="fa fa-chart-bar"></i> Analytics</a>
+    <a href="#"><i class="fa fa-gear"></i> Settings</a>
+    <a href="#" onclick="logout()" style="color:#ff6b6b;"><i class="fa fa-right-from-bracket"></i> Logout</a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="s-avatar">R</div>
+    <div class="user-info">
+      <div class="name">Rahul Sharma</div>
+      <div class="role">Vendor</div>
+    </div>
+    <i class="fa fa-ellipsis-vertical" style="color:var(--muted);margin-left:auto;font-size:13px;"></i>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <header class="topbar">
+    <div class="page-title">My Profile</div>
+    <div class="topbar-right">
+      <div class="vendor-badge"><i class="fa fa-circle-check" style="font-size:11px;"></i> Verified</div>
+      <div class="icon-btn">
+        <i class="fa fa-bell" style="font-size:14px;"></i>
+        <span class="notif-dot"></span>
+      </div>
+      <div class="icon-btn"><i class="fa fa-sliders" style="font-size:14px;"></i></div>
+      <button class="logout-btn" onclick="logout()"><i class="fa fa-right-from-bracket"></i> Logout</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- ── Profile Hero ── -->
+    <div class="profile-hero">
+      <div class="hero-cover">
+        <button class="cover-edit-btn" onclick="showToast('Cover photo updated!')">
+          <i class="fa fa-camera"></i> Change Cover
+        </button>
+      </div>
+      <div class="hero-body">
+        <div class="hero-left">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar" id="heroAvatar">R</div>
+            <div class="avatar-status"></div>
+            <div class="avatar-cam" onclick="showToast('Photo updated!')">
+              <i class="fa fa-camera"></i>
+            </div>
+          </div>
+          <div class="hero-info">
+            <h1 class="hero-name" id="heroName">Rahul Sharma</h1>
+            <div class="hero-meta">
+              <span class="hero-tag"><i class="fa fa-briefcase"></i> <span id="heroCat">Home & Tech Services</span></span>
+              <span class="hero-tag"><i class="fa fa-location-dot"></i> <span id="heroCity">Mumbai, Maharashtra</span></span>
+              <span class="hero-tag"><i class="fa fa-calendar"></i> Joined Jan 2023</span>
+            </div>
+            <div class="hero-badges" style="margin-top:10px;">
+              <span class="h-badge verified"><i class="fa fa-circle-check"></i> Verified Vendor</span>
+              <span class="h-badge top"><i class="fa fa-star"></i> Top Rated</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-right">
+          <button class="share-btn"><i class="fa fa-arrow-up-from-bracket"></i> Share</button>
+          <button class="edit-profile-btn" onclick="openEditModal()">
+            <i class="fa fa-pen"></i> Edit Profile
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+
+  <div class="stat-card">
+    <div class="stat-icon" style="background:rgba(0,229,180,.12);color:var(--accent3);">
+      <i class="fa fa-calendar-check"></i>
+    </div>
+    <div class="stat-info">
+      <div class="val" id="sTotalBook">0</div>
+      <div class="lbl">Total Bookings</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon" style="background:rgba(91,110,248,.12);color:var(--accent);">
+      <i class="fa fa-circle-check"></i>
+    </div>
+    <div class="stat-info">
+      <div class="val" id="sCompleted">0</div>
+      <div class="lbl">Completed</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon" style="background:rgba(248,87,166,.12);color:var(--accent2);">
+      <i class="fa fa-indian-rupee-sign"></i>
+    </div>
+    <div class="stat-info">
+      <div class="val" id="sEarnings">₹0</div>
+      <div class="lbl">Total Earned</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon" style="background:rgba(251,191,36,.12);color:#fbbf24;">
+      <i class="fa fa-star"></i>
+    </div>
+    <div class="stat-info">
+      <div class="val" id="sRating">0</div>
+      <div class="lbl">Avg Rating</div>
+    </div>
+  </div>
+
+</div>
+
+    <!-- ── Profile Grid ── -->
+    <div class="profile-grid">
+
+      <!-- LEFT COLUMN -->
+      <div>
+
+        <!-- Personal Info -->
+        <div class="pcard">
+          <div class="pcard-header">
+            <div class="pcard-title"><i class="fa fa-user"></i> Personal Information</div>
+            <button class="pcard-edit" onclick="openEditModal()"><i class="fa fa-pen"></i> Edit</button>
+          </div>
+          <div class="pcard-body">
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-label">Full Name</div>
+                <div class="info-val"><i class="fa fa-user"></i> <span id="infoName">Rahul Sharma</span></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Phone</div>
+                <div class="info-val"><i class="fa fa-phone"></i> <span id="infoPhone">+91 98765 43210</span></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Email</div>
+                <div class="info-val"><i class="fa fa-envelope"></i> <span id="infoEmail">rahul@vendorhub.in</span></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Location</div>
+                <div class="info-val"><i class="fa fa-location-dot"></i> <span id="infoCity">Mumbai, Maharashtra</span></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Experience</div>
+                <div class="info-val"><i class="fa fa-briefcase"></i> <span id="infoExp">6 Years</span></div>
+              </div>
+              <div class="info-item">
+                <div class="info-label">Languages</div>
+                <div class="info-val"><i class="fa fa-language"></i> Hindi, English, Marathi</div>
+              </div>
+              <div class="info-item info-full">
+                <div class="info-label">About</div>
+                <div class="info-val" style="flex-direction:column; align-items:flex-start; line-height:1.7; color:var(--muted); font-weight:400;" id="infoAbout">
+                  Professional home and tech service provider with 6+ years of experience. Specialising in appliance repair, smart home setup, and deep cleaning. Committed to quality work and timely delivery.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="pcard">
+          <div class="pcard-header">
+            <div class="pcard-title"><i class="fa fa-layer-group"></i> Services & Skills</div>
+          </div>
+          <div class="pcard-body">
+            <div class="skills-wrap">
+              <span class="skill-tag c2">Home Cleaning</span>
+              <span class="skill-tag c1">Appliance Repair</span>
+              <span class="skill-tag c3">Smart Home Setup</span>
+              <span class="skill-tag c4">AC Servicing</span>
+              <span class="skill-tag c2">Plumbing</span>
+              <span class="skill-tag c1">Electrical Work</span>
+              <span class="skill-tag c3">Painting</span>
+              <span class="skill-tag c4">Pest Control</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Links -->
+        <div class="pcard">
+          <div class="pcard-header">
+            <div class="pcard-title"><i class="fa fa-share-nodes"></i> Social & Web</div>
+            <button class="pcard-edit" onclick="showToast('Social links updated!')"><i class="fa fa-pen"></i> Edit</button>
+          </div>
+          <div class="pcard-body">
+            <div class="social-links">
+              <a class="soc-link instagram"><i class="fa-brands fa-instagram"></i> Instagram</a>
+              <a class="soc-link twitter"><i class="fa-brands fa-x-twitter"></i> Twitter</a>
+              <a class="soc-link linkedin"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+              <a class="soc-link website"><i class="fa fa-globe"></i> Website</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Availability -->
+        <div class="pcard">
+          <div class="pcard-header">
+            <div class="pcard-title"><i class="fa fa-clock"></i> Weekly Availability</div>
+            <button class="pcard-edit" onclick="showToast('Availability saved!')"><i class="fa fa-pen"></i> Edit</button>
+          </div>
+          <div class="pcard-body">
+            <div class="avail-grid">
+              <div class="avail-day">
+                <div class="day-name">Mon</div>
+                <div class="avail-dot on"><i class="fa fa-check"></i></div>
+              </div>
+              <div class="avail-day">
+                <div class="day-name">Tue</div>
+                <div class="avail-dot on"><i class="fa fa-check"></i></div>
+              </div>
+              <div class="avail-day">
+                <div class="day-name">Wed</div>
+                <div class="avail-dot on"><i class="fa fa-check"></i></div>
+              </div>
+              <div class="avail-day">
+                <div class="day-name">Thu</div>
+                <div class="avail-dot on"><i class="fa fa-check"></i></div>
+              </div>
+              <div class="avail-day">
+                <div class="day-name">Fri</div>
+                <div class="avail-dot on"><i class="fa fa-check"></i></div>
+              </div>
+              <div class="avail-day">
+                <div class="day-name">Sat</div>
+                <div class="avail-dot on"><i class="fa fa-check"></i></div>
+              </div>
+              <div class="avail-day">
+                <div class="day-name">Sun</div>
+                <div class="avail-dot off"><i class="fa fa-xmark"></i></div>
+              </div>
+            </div>
+            <p style="font-size:12px;color:var(--muted);margin-top:14px;">
+              <i class="fa fa-clock" style="color:var(--accent3);margin-right:5px;"></i>
+              Working Hours: <strong style="color:var(--text);">9:00 AM – 7:00 PM</strong>
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div>
+
+        <!-- Completion Ring -->
+        <div class="pcard">
+          <div class="pcard-header">
+            <div class="pcard-title"><i class="fa fa-chart-pie"></i> Profile Strength</div>
+          </div>
+          <div class="pcard-body" style="padding-top:8px;">
+            <div class="completion-ring">
+              <div class="ring-wrap">
+                <svg class="ring-svg" viewBox="0 0 120 120">
+                  <defs>
+                    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" style="stop-color:var(--accent3)"/>
+                      <stop offset="100%" style="stop-color:var(--accent)"/>
+                    </linearGradient>
+                  </defs>
+                  <circle class="ring-bg" cx="60" cy="60" r="54"/>
+                  <circle class="ring-fg" id="ringFg" cx="60" cy="60" r="54"/>
+                </svg>
+                <div class="ring-label">
+                  <div class="ring-pct">88%</div>
+                  <div class="ring-sub">Complete</div>
+                </div>
+              </div>
+              <div class="ring-desc">Add bank details and GST number to reach 100%</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px;">
+                  <i class="fa fa-circle-check" style="color:var(--accent3);"></i> Basic Info
+                </span>
+                <span style="font-size:11px;color:var(--accent3);font-weight:600;">Done</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px;">
+                  <i class="fa fa-circle-check" style="color:var(--accent3);"></i> Services Added
+                </span>
+                <span style="font-size:11px;color:var(--accent3);font-weight:600;">Done</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px;">
+                  <i class="fa fa-circle-check" style="color:var(--accent3);"></i> ID Verified
+                </span>
+                <span style="font-size:11px;color:var(--accent3);font-weight:600;">Done</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px;">
+                  <i class="fa fa-circle" style="color:var(--muted);font-size:10px;"></i> Bank Details
+                </span>
+                <span style="font-size:11px;color:#fbbf24;font-weight:600;">Pending</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px;">
+                  <i class="fa fa-circle" style="color:var(--muted);font-size:10px;"></i> GST Number
+                </span>
+                <span style="font-size:11px;color:#fbbf24;font-weight:600;">Pending</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rating Overview -->
+        <div class="pcard">
+          <div class="pcard-header">
+            <div class="pcard-title"><i class="fa fa-star"></i> Rating Overview</div>
+          </div>
+          <div class="pcard-body" style="padding-top:12px;">
+            <div class="rating-big">
+              <div class="rating-num">4.8</div>
+              <div class="rating-stars-lg">
+                <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                <i class="fa fa-star"></i><i class="fa fa-star-half-stroke"></i>
+              </div>
+              <div class="rating-count">Based on 124 reviews</div>
+            </div>
+            <div class="rating-bars">
+              <div class="rbar-row">
+                <div class="rbar-lbl">5</div>
+                <div class="rbar-track"><div class="rbar-fill" style="width:82%"></div></div>
+                <div class="rbar-pct">82%</div>
+              </div>
+              <div class="rbar-row">
+                <div class="rbar-lbl">4</div>
+                <div class="rbar-track"><div class="rbar-fill" style="width:11%"></div></div>
+                <div class="rbar-pct">11%</div>
+              </div>
+              <div class="rbar-row">
+                <div class="rbar-lbl">3</div>
+                <div class="rbar-track"><div class="rbar-fill" style="width:5%"></div></div>
+                <div class="rbar-pct">5%</div>
+              </div>
+              <div class="rbar-row">
+                <div class="rbar-lbl">2</div>
+                <div class="rbar-track"><div class="rbar-fill" style="width:1%"></div></div>
+                <div class="rbar-pct">1%</div>
+              </div>
+              <div class="rbar-row">
+                <div class="rbar-lbl">1</div>
+                <div class="rbar-track"><div class="rbar-fill" style="width:1%"></div></div>
+                <div class="rbar-pct">1%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Reviews -->
+        <div class="pcard">
+          <div class="pcard-header">
+            <div class="pcard-title"><i class="fa fa-comments"></i> Recent Reviews</div>
+          </div>
+          <div class="pcard-body" style="padding-top:12px;">
+
+            <div class="review-item">
+              <div class="rev-top">
+                <div class="rev-user">
+                  <div class="rev-av" style="background:rgba(91,110,248,.15);color:var(--accent);">A</div>
+                  <div>
+                    <div class="rev-name">Aarti Mehta</div>
+                    <div class="rev-date">28 Mar 2026</div>
+                  </div>
+                </div>
+                <div class="rev-stars">
+                  <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i><i class="fa fa-star"></i>
+                </div>
+              </div>
+              <div class="rev-text">Excellent service! Very professional and thorough. Came on time and did a fantastic job with the deep cleaning. Would highly recommend.</div>
+            </div>
+
+            <div class="review-item">
+              <div class="rev-top">
+                <div class="rev-user">
+                  <div class="rev-av" style="background:rgba(0,229,180,.12);color:var(--accent3);">S</div>
+                  <div>
+                    <div class="rev-name">Suresh Patil</div>
+                    <div class="rev-date">22 Mar 2026</div>
+                  </div>
+                </div>
+                <div class="rev-stars">
+                  <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i><i class="fa fa-star-half-stroke"></i>
+                </div>
+              </div>
+              <div class="rev-text">Fixed my AC and also checked the electrical wiring. Very knowledgeable and honest about what needed to be done. Great work!</div>
+            </div>
+
+            <div class="review-item">
+              <div class="rev-top">
+                <div class="rev-user">
+                  <div class="rev-av" style="background:rgba(248,87,166,.12);color:var(--accent2);">P</div>
+                  <div>
+                    <div class="rev-name">Priya Kulkarni</div>
+                    <div class="rev-date">15 Mar 2026</div>
+                  </div>
+                </div>
+                <div class="rev-stars">
+                  <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>
+                  <i class="fa fa-star"></i><i class="fa fa-star"></i>
+                </div>
+              </div>
+              <div class="rev-text">Set up smart home devices beautifully. Very patient with explaining everything. Will definitely book again.</div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EDIT MODAL ══ -->
+<div class="edit-overlay" id="editOverlay">
+  <div class="edit-modal">
+    <div class="edit-modal-header">
+      <div class="edit-modal-title"><i class="fa fa-pen" style="color:var(--accent3);margin-right:8px;"></i>Edit Profile</div>
+      <button class="close-btn" onclick="closeEditModal()"><i class="fa fa-xmark"></i></button>
+    </div>
+    <div class="edit-modal-body">
+      <div class="efield-row">
+        <div class="efield">
+          <label>Full Name</label>
+          <input type="text" id="editName" value="Rahul Sharma" placeholder="Your full name">
+        </div>
+        <div class="efield">
+          <label>Phone</label>
+          <input type="text" id="editPhone" value="+91 98765 43210" placeholder="Phone number">
+        </div>
+      </div>
+      <div class="efield">
+        <label>Email</label>
+        <input type="email" id="editEmail" value="rahul@vendorhub.in" placeholder="Email address">
+      </div>
+      <div class="efield-row">
+        <div class="efield">
+          <label>City / Location</label>
+          <input type="text" id="editCity" value="Mumbai, Maharashtra" placeholder="Your city">
+        </div>
+        <div class="efield">
+          <label>Years of Experience</label>
+          <input type="text" id="editExp" value="6 Years" placeholder="e.g. 5 Years">
+        </div>
+      </div>
+      <div class="efield">
+        <label>Service Category</label>
+        <input type="text" id="editCat" value="Home & Tech Services" placeholder="e.g. Home Services">
+      </div>
+      <div class="efield">
+        <label>About / Bio</label>
+        <textarea id="editAbout">Professional home and tech service provider with 6+ years of experience. Specialising in appliance repair, smart home setup, and deep cleaning. Committed to quality work and timely delivery.</textarea>
+      </div>
+    </div>
+    <div class="edit-modal-footer">
+      <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+      <button class="btn-save" onclick="saveProfile()"><i class="fa fa-check"></i> Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="{% static 'js/vendor_profile.js' %}"></script>
+
+</body>
+</html>
